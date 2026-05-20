@@ -1,0 +1,303 @@
+/* @theme esgi */
+
+@import 'default';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --color-bg: #ffffff;
+  --color-fg: #1a1a2e;
+  --color-primary: #2d6a9f;
+  --color-secondary: #16213e;
+  --color-accent: #f0a500;
+  --color-light: #f4f7fb;
+  --color-muted: #6b7280;
+  --color-code-bg: #f1f5f9;
+  --color-border: #e2e8f0;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+/* ── Base slide ───────────────────────────────────────────── */
+section {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  line-height: 1.6;
+  padding: 48px 60px;
+  width: 1280px;
+  height: 720px;
+  box-sizing: border-box;
+}
+
+/* ── Typography ───────────────────────────────────────────── */
+h1 {
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 0.3em 0;
+  line-height: 1.2;
+  border-bottom: 3px solid var(--color-primary);
+  padding-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0.6em 0 0.3em 0;
+}
+
+h3 {
+  font-size: 1.15em;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin: 0.5em 0 0.2em 0;
+}
+
+p {
+  margin: 0.4em 0;
+}
+
+strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+em {
+  color: var(--color-muted);
+}
+
+/* ── Lists ────────────────────────────────────────────────── */
+ul, ol {
+  margin: 0.3em 0 0.3em 0;
+  padding-left: 1.4em;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+li::marker {
+  color: var(--color-primary);
+}
+
+/* ── Code ─────────────────────────────────────────────────── */
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82em;
+  background: var(--color-code-bg);
+  color: #c0392b;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+pre {
+  background: #1e2533;
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  margin: 0.5em 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+pre code {
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 0.78em;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* ── Blockquote (used for callouts) ──────────────────────── */
+blockquote {
+  background: var(--color-light);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 8px 8px 0;
+  padding: 0.6em 1em;
+  margin: 0.5em 0;
+  color: var(--color-fg);
+  font-style: normal;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+/* ── Tables ───────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  margin: 0.5em 0;
+}
+
+th {
+  background: var(--color-primary);
+  color: white;
+  padding: 0.5em 0.8em;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.4em 0.8em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+tr:nth-child(even) td {
+  background: var(--color-light);
+}
+
+/* ── Pagination ───────────────────────────────────────────── */
+section::after {
+  font-size: 0.7em;
+  color: var(--color-muted);
+  bottom: 20px;
+  right: 60px;
+}
+
+/* ── TITLE slide ──────────────────────────────────────────── */
+section.title {
+  background: linear-gradient(135deg, #16213e 0%, #1a3a5c 60%, #2d6a9f 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 80px;
+}
+
+section.title h1 {
+  font-size: 2.4em;
+  font-weight: 700;
+  color: white;
+  border-bottom: 3px solid var(--color-accent);
+  padding-bottom: 0.3em;
+  margin-bottom: 0.4em;
+  line-height: 1.15;
+}
+
+section.title h2 {
+  font-size: 1.15em;
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  margin: 0 0 0.2em 0;
+}
+
+section.title p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85em;
+  margin-top: 1.5em;
+}
+
+section.title strong {
+  color: var(--color-accent);
+}
+
+/* ── SECTION slide ────────────────────────────────────────── */
+section.section {
+  background: var(--color-light);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 80px;
+  border-left: 8px solid var(--color-primary);
+}
+
+section.section h1 {
+  font-size: 2em;
+  color: var(--color-secondary);
+  border-bottom: none;
+}
+
+section.section h2 {
+  font-size: 1.1em;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-top: 0.3em;
+}
+
+section.section .counter {
+  font-size: 4em;
+  font-weight: 700;
+  color: var(--color-border);
+  position: absolute;
+  right: 80px;
+  bottom: 40px;
+  line-height: 1;
+}
+
+/* ── QUIZ slide ───────────────────────────────────────────── */
+section.quiz {
+  background: #fff8e1;
+  border-top: 6px solid var(--color-accent);
+}
+
+section.quiz h1 {
+  color: #92610a;
+  border-bottom-color: var(--color-accent);
+  font-size: 1.4em;
+}
+
+section.quiz h2 {
+  color: #92610a;
+}
+
+/* ── Two-column layout ────────────────────────────────────── */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+  margin-top: 0.5em;
+}
+
+.columns-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5em;
+}
+
+/* ── Highlight box ────────────────────────────────────────── */
+.highlight {
+  background: #e8f4fd;
+  border: 1px solid #b3d4f0;
+  border-radius: 8px;
+  padding: 0.6em 1em;
+  margin: 0.4em 0;
+}
+
+.highlight-orange {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 0.6em 1em;
+  margin: 0.4em 0;
+}
+
+/* ── Footer bar ───────────────────────────────────────────── */
+section:not(.title):not(.section)::before {
+  content: 'Introduction aux LLMs — ESGI Paris';
+  position: absolute;
+  bottom: 20px;
+  left: 60px;
+  font-size: 0.62em;
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+/* ── Muted text ───────────────────────────────────────────── */
+.muted {
+  color: var(--color-muted);
+  font-size: 0.85em;
+}
+
+/* ── Math display ─────────────────────────────────────────── */
+.math-block {
+  background: var(--color-light);
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  text-align: center;
+  margin: 0.5em 0;
+  font-size: 1.05em;
+}
