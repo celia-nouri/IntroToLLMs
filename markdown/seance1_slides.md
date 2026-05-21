@@ -31,7 +31,6 @@ Semestre 2, 2025–2026
 3. Rappels : Machine Learning & rétropropagation
 4. Représentations vectorielles des mots : de Bag-of-Words à Word2Vec
 5. L'architecture Transformer
-6. Pré-entraînement & Fine-tuning
 
 > **Objectif** : construire une intuition solide sur le TAL (NLP) pour comprendre les LLMs dans les séances suivantes
 
@@ -80,10 +79,6 @@ L'instrument de musique ? La pile électique ?
 Qui a les jumelles ? Moi ou l'homme.
 <br>
 ---
-
-### Le langage est ambigu par nature
-
-<br>
 
 #### Connaissance du monde
 > * "Marc s’est assis, a regardé le menu."
@@ -255,7 +250,7 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 * **Séance 2 (12 juin)**: Entrainement : Tokenization, Pré-entraînement, Fine-tuning, Alignement
 * **Séance 3 (10 juillet)**: Utilisation et LLM-augmentés : Prompting, RAG 
 * **Séance 4 (24 juillet)**: Agents : Toolformer, Architectures agentiques, 
-* **Séance 5 (7/11, Francis)**: Frontière : Modèles de raisonnement, Multimodalité,   
+* **Séance 5 (28 juillet)**: Frontière : Modèles de raisonnement, Multimodalité,   
 
 * **Examen (31 juillet)**: QCM final 40 questions
 ---
@@ -466,6 +461,7 @@ C'est la **cross-entropy**. Plus $\mathcal{L}$ est faible, mieux le modèle pré
 **Objectif** : trouver $\theta^*$ tel que $\mathcal{L}$ soit minimale sur les données d'entraînement.
 
 **Discussion** : comment trouver le minimum (s'il existe) de la fonction de perte ? 
+
 ---
 
 ## Descente de gradient
@@ -640,9 +636,11 @@ $$\text{TF-IDF}(t, d) = \underbrace{\text{TF}(t,d)}_{\text{fréq. dans le doc}} 
 *"transformer"*, *"tokenisation"* → IDF élevé → très informatifs
 
 ---
+
 ## TF-IDF
 
 <center><img width="800px" src="../imgs/course1/tfidf.png"/></center>
+
 ---
 
 ## Word2Vec — Le tournant (2013)
@@ -712,7 +710,7 @@ Conséquence statistique de l'entraînement sur des milliards de phrases.
 ## Espace latent (vectoriel)
 
 <br>
-<center><img width="700px" src="../imgs/course1/latent_space.png"/></center>
+<center><img width="600px" src="../imgs/course1/latent_space.png"/></center>
 
 
 ---
@@ -799,8 +797,10 @@ x₃ → [RNN] → h₃    (h₂ alimente h₃)
 Intuitif : on lit la phrase mot à mot, la compréhension s'accumule.
 
 ---
+
 ## Réseaux Récurrents (RNNs)
 <center><img width="1000px" src="../imgs/course1/rnn.svg"/></center>
+
 ---
 
 ## Le problème du gradient qui disparaît
@@ -849,9 +849,11 @@ Avantages immédiats :
 - **Scalabilité** : plus de paramètres = meilleur modèle (jusqu'à un certain point)
 
 ---
+
 ## L'architecture transformer
 
-<center><img width="800px" src="../imgs/course1/transformers.png"/></center>
+<center><img width="700px" src="../imgs/course1/transformers.png"/></center>
+
 ---
 
 ## Le mécanisme d'Attention
@@ -861,6 +863,7 @@ Avantages immédiats :
 Le mécanisme d'attention permet à un modèle de langage de pondérer l'importance relative de chaque mot par rapport aux autres. Concrètement, pour chaque mot, le modèle calcule un score de pertinence avec tous les autres mots, ce qui lui permet de "focaliser" son interprétation sur les parties les plus utiles du contexte.
 
 <br>
+
 ---
 
 ## Le mécanisme d'Attention
@@ -878,6 +881,7 @@ Chaque token produit **3 vecteurs** :
 **Analogie** : Imagine une bibliothèque : Tu arrives avec une requête (Query) : "Je cherche un livre sur les réseaux de neurones". Chaque livre a une étiquette au dos (Key) : "Machine Learning", "Cuisine", "Histoire"... Le contenu du livre (Value) : c'est ce que tu liras vraiment si tu le choisis.
 <br>
 En pratique les Q, K, V pour chaque tokens sont des vecteurs entraînés pour que les bonnes paires se ressemblent. C'est le modèle qui apprend ce que "chercher" et "proposer" veulent dire.
+
 ---
 
 ## Attention — Le calcul
@@ -1107,7 +1111,7 @@ Charger un modèle Hugging Face, obtenir des embeddings contextuels.
 # Séance 2 — 12 juin
 ## Entraînement : comment construit-on un LLM ?
 
-Pré-entraînement à grande échelle · Lois de Chinchilla
+Tokenization · Pré-entraînement à grande échelle · Lois de Chinchilla
 Instruction tuning & RLHF · Évaluation
 
 **Lectures conseillées** :
