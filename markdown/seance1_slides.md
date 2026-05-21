@@ -8,7 +8,7 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 1 — Du NLP symbolique aux Transformers
+## Séance 1 : Du NLP symbolique aux Transformers
 
 **4ème année RO DEV - ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
@@ -42,7 +42,7 @@ Semestre 2, 2025–2026
 
 | | |
 |---|---|
-| **Volume** | 20h — 5 séances de 4h |
+| **Volume** | 20h; 5 séances de 4h |
 | **Format** | ~2h cours + ~2h lab Python |
 | **Éval** | QCM 40 questions (31 juillet) |
 | **Prérequis** | Python, bases ML, APIs REST |
@@ -266,7 +266,6 @@ Un **token** = l'unité de base que le modèle traite. Ce n'est **pas forcément
 
 <br>
 
-B
 
 | Découpage | Résultat |
 |---|---|
@@ -284,9 +283,9 @@ Les LLMs modernes utilisent le **sous-mot** (WordPiece, SentencePiece, BPE). Voc
 
 <br>
 
-**Par caractère** — séquences très longues, pas de sémantique
-**Par mot entier** — mots rares, néologismes, formes fléchies (`courons`, `courais`…)
-**Par sous-mot** — bon compromis : vocabulaire fini, mots inconnus décomposables, formes fléchies rassemblées
+**Par caractère** : séquences très longues, pas de sémantique
+**Par mot entier** : mots rares, néologismes, formes fléchies (`courons`, `courais`…)
+**Par sous-mot** : bon compromis : vocabulaire fini, mots inconnus décomposables, formes fléchies rassemblées
 
 <br>
 
@@ -307,12 +306,12 @@ Deux techniques pour **normaliser** les formes d'un mot.
 
 <br>
 
-**Stemming** — couper la fin, rapide mais approximatif
+**Stemming** : couper la fin, rapide mais approximatif
 ```
 "courais", "courons", "courir"  →  "cour"   ← pas un vrai mot !
 ```
 
-**Lemmatisation** — forme canonique, tient compte du contexte grammatical, mais coûteux
+**Lemmatisation** : forme canonique, tient compte du contexte grammatical, mais coûteux
 ```
 "courais", "courons", "courir"  →  "courir"
 "meilleures", "meilleur"        →  "bon"   ← le lemme de "meilleur" !
@@ -334,7 +333,7 @@ Librairie recommandée : **`spaCy`** (Python)
 # "le", "de", "et", "un"... → retirés
 ```
 
-⚠️ Attention au contexte : *"Être ou **ne** **pas** être"* — les stop words comptent ici !
+⚠️ Attention au contexte : *"Être ou **ne** **pas** être"* : les stop words comptent ici !
 
 <br>
 
@@ -398,9 +397,9 @@ Rang 100: ...    → très rare
 
 <!-- _class: quiz -->
 
-## 🧩 Quiz 1 — Réponse
+## 🧩 Quiz 1 : Réponse
 
-**Réponse : C — "allée"**
+**Réponse : C : "allée"**
 
 <br>
 
@@ -414,7 +413,7 @@ le lemme serait `aller`.
 
 <br>
 
-> **Le contexte grammatical change le lemme** — c'est pourquoi la lemmatisation demande une analyse syntaxique, pas juste une règle de troncature.
+> **Le contexte grammatical change le lemme** : c'est pourquoi la lemmatisation demande une analyse syntaxique, pas juste une règle de troncature.
 
 ---
 
@@ -436,7 +435,7 @@ $$\hat{y} = f(x\,;\,\theta)$$
 
 - $x$ = entrée (texte, image…)
 - $\hat{y}$ = prédiction du modèle
-- $\theta$ = **paramètres** (poids) — des millions voire milliards de variables à calibrer
+- $\theta$ = **paramètres** (poids); des millions voire milliards de variables à calibrer
 
 <br>
 
@@ -643,7 +642,7 @@ $$\text{TF-IDF}(t, d) = \underbrace{\text{TF}(t,d)}_{\text{fréq. dans le doc}} 
 
 ---
 
-## Word2Vec — Le tournant (2013)
+## Word2Vec (2013)
 
 **Mikolov et al., Google, 2013** (probablement le papier en TAL le plus influent avant les Transformers).
 
@@ -661,14 +660,14 @@ Word2Vec entraîne un petit réseau sur une tâche simple :
 - **CBOW** : étant donné le contexte, prédire le mot central
 
 ---
-## Word2Vec — Comment ça marche
+## Word2Vec : Comment ça marche ?
 
 Apprend les représentations vectorielles des mots **sans supervision**.
 <br>
 <center><img width="700px" src="../imgs/course1/cbow_skipgram.png"/></center>
 
 ---
-## Word2Vec — Comment ça marche
+## Word2Vec : Comment ça marche ?
 
 **Skip-gram** sur la phrase *"Le [chat] dort sur le tapis"* :
 
@@ -688,7 +687,7 @@ Cohérence sémantique : deux mots qui apparaissent dans des **contextes similai
 
 ---
 
-## Word2Vec — Résultats célèbres
+## Word2Vec : L'arithmétique des mots
 
 ```
 vecteur("roi") - vecteur("homme") + vecteur("femme")
@@ -710,7 +709,7 @@ Conséquence statistique de l'entraînement sur des milliards de phrases.
 ## Espace latent (vectoriel)
 
 <br>
-<center><img width="600px" src="../imgs/course1/latent_space.png"/></center>
+<center><img width="500px" src="../imgs/course1/latent_space.png"/></center>
 
 
 ---
@@ -734,7 +733,7 @@ $$\text{vecteur("Paris")} - \text{vecteur("France")} + \text{vecteur("Allemagne"
 
 <!-- _class: quiz -->
 
-## 🧩 Quiz 3 — Réponse
+## 🧩 Quiz 3 : Réponse
 
 **Réponse : "Berlin"**
 
@@ -819,8 +818,8 @@ Les premiers tokens n'apprennent plus rien.
 <br>
 
 **Solutions partielles** :
-- **LSTM** (Hochreiter & Schmidhuber, 1997) — portes de mémoire
-- **GRU** (Cho et al., 2014) — version simplifiée du LSTM
+- **LSTM** (Hochreiter & Schmidhuber, 1997) : portes de mémoire
+- **GRU** (Cho et al., 2014) : version simplifiée du LSTM
 - Limitation persistante : traitement **séquentiel**, pas de parallélisation
 
 ---
@@ -884,7 +883,7 @@ En pratique les Q, K, V pour chaque tokens sont des vecteurs entraînés pour qu
 
 ---
 
-## Attention — Le calcul
+## Attention : Le calcul
 
 **Score d'attention** entre le token $i$ et le token $j$ :
 
@@ -907,7 +906,7 @@ Chaque mot d'une séquence calcule **son** attention sur tous les autres mots de
 
 ---
 
-## Self-Attention — Pourquoi ça marche
+## Self-Attention : Pourquoi ça marche ?
 
 Tous ces calculs se font **en parallèle** via des multiplications matricielles.
 Le modèle ne requiert pas de supervision ou annotation manuelle. Chaque token apprend sa représentation à partir de son contexte.
@@ -1053,7 +1052,7 @@ Représentations contextuelles
 
 <!-- _class: quiz -->
 
-## 🧩 Quiz final — 5 minutes
+## 🧩 Quiz final : 5 minutes
 
 **1.** Quelle est la différence entre un token et un mot ?
 
@@ -1072,15 +1071,15 @@ Représentations contextuelles
 
 <br>
 
-📄 **Word2Vec** — Mikolov et al. (2013) — arxiv.org/abs/1301.3781
-📄 **Attention is All You Need** — Vaswani et al. (2017) — arxiv.org/abs/1706.03762
-📄 **GloVe** — Pennington et al. (2014) — nlp.stanford.edu/projects/glove
-📄 **LSTM** — Hochreiter & Schmidhuber (1997) — Neural Computation
+📄 **Word2Vec** : Mikolov et al. (2013); arxiv.org/abs/1301.3781
+📄 **Attention is All You Need** : Vaswani et al. (2017); arxiv.org/abs/1706.03762
+📄 **GloVe** : Pennington et al. (2014); nlp.stanford.edu/projects/glove
+📄 **LSTM** : Hochreiter & Schmidhuber (1997); Neural Computation
 
 <br>
 
-🛠️ **spaCy** — spacy.io | **Hugging Face** — huggingface.co
-📖 **CS224n** (Stanford NLP) — cours en ligne gratuit, excellent
+🛠️ **spaCy** : spacy.io | **Hugging Face** : huggingface.co
+📖 **CS224n** (Stanford NLP) : cours en ligne gratuit, excellent
 
 <br>
 
@@ -1088,33 +1087,33 @@ Représentations contextuelles
 
 ---
 
-## Lab — Aujourd'hui (1h-2h)
+## Lab : Aujourd'hui (1h-2h)
 
 <br>
 
-**Partie 1** — Pré-traitement avec `spaCy`
+**Partie 1** : Pré-traitement avec `spaCy`
 Tokeniser, lemmatiser, retirer les stop words sur un jeu de textes.
 
-**Partie 2** — Embeddings BoW & TF-IDF avec `scikit-learn`
+**Partie 2** : Embeddings BoW & TF-IDF avec `scikit-learn`
 Visualiser les vecteurs (PCA), comparer des documents.
 
-**Partie 3** — Word2Vec avec `gensim`
+**Partie 3** : Word2Vec avec `gensim`
 Explorer les analogies et les voisins sémantiques.
 
-**Partie 4** — Premier contact avec les Transformers
-Charger un modèle Hugging Face, obtenir des embeddings contextuels.
+**Partie 4** : Premier contact avec les Transformers
+Charger un modèle Hugging Face, utiliser le tokenizer, obtenir des embeddings contextuels.
 
 ---
 
 <!-- _class: title -->
 
-# Séance 2 — 12 juin
+# Séance 2 : 12 juin
 ## Entraînement : comment construit-on un LLM ?
 
 Tokenization · Pré-entraînement à grande échelle · Lois de Chinchilla
 Instruction tuning & RLHF · Évaluation
 
 **Lectures conseillées** :
-Vaswani et al. (2017), "Attention is All You Need" — abstract + intro
+Vaswani et al. (2017), "Attention is All You Need" : abstract + intro
 
 `celia.nouri@inria.fr`
