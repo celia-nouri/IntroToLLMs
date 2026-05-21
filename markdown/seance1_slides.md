@@ -78,6 +78,13 @@ L'instrument de musique ? La pile électique ?
 #### Ambiguïté syntaxique
 > *"J'ai vu l'homme avec les jumelles."*
 Qui a les jumelles ? Moi ou l'homme.
+<br>
+---
+
+### Le langage est ambigu par nature
+
+<br>
+
 #### Connaissance du monde
 > * "Marc s’est assis, a regardé le menu."
 Sous-entendu : Marc est au restaurant.
@@ -132,11 +139,6 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 
 ---
 ### Les sources de données en TAL
-
-<center><img width="1000px" src="../imgs/course1/wooclap.png"/></center>
-
----
-### Les sources de données en TAL
 <br/>
 
 <center>
@@ -178,7 +180,7 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 
 ### Le TAL en 2025-2026
 <center>
-<img width="900px" src="../imgs/course1/google.png"/>
+<img width="900px" src="../imgs/course1/bing.png"/>
 </center>
 
 
@@ -200,7 +202,7 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 
 ---
 <!--_class: lead -->
-# Est-ce que les tâches de TAL sont résolues ? <h6>(No.)</h6>
+# Est-ce que les tâches de TAL sont résolues ? <h3>(NON.)</h3>
 
 ---
 
@@ -234,26 +236,29 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
     <div style="flex: 66%;">
         <center>
         <img width="300px" src="../imgs/course1/celia.jpeg"/></br>
-        Célia <br/> Nouri </center>
+        Célia Nouri  <br/> celia.nouri@inria.fr </center>
     </div>
 </div>
 
-<center><pre>celia.nouri@inria.fr</pre></center>
 
 ---
 ### Organisation des séances
 
-– Comprendre l'architecture et le processus d'entraînement d'un LLM moderne
-– Utiliser efficacement un LLM via des techniques de prompting et d'intégration API
-– Concevoir un système RAG (Retrieval-Augmented Generation) fonctionnel
-– Construire un agent simple avec appel d'outils
-– Situer les dernières avancées du domaine (modèles de raisonnement, open source, etc.)
 * Objectives 
     * ***Connaissances :*** comprendre l'architecture et le processus d'entraînement d'un LLM moderne, et les avancées récentes dans le domaine du TAL.
     * ***Mise en practice :*** Concevoir un système intégrant des LLMs modernes (RAG : Retrieval-Augmented Generation, agents) fonctionnel
     * ***Distance Critique :*** Comprendre les limites et problèmes actuels liés aux LLMs, et analyser les méthodes et avancées en maintenant une distance critique.
 ---
 
+### Organisation des séances
+* **Séance 1 (Aujourd'hui)**: Fondations : Introduction, Recap ML, embeddings, Transformers
+* **Séance 2 (12 juin)**: Entrainement : Tokenization, Pré-entraînement, Fine-tuning, Alignement
+* **Séance 3 (10 juillet)**: Utilisation et LLM-augmentés : Prompting, RAG 
+* **Séance 4 (24 juillet)**: Agents : Toolformer, Architectures agentiques, 
+* **Séance 5 (7/11, Francis)**: Frontière : Modèles de raisonnement, Multimodalité,   
+
+* **Examen (31 juillet)**: QCM final 40 questions
+---
 <!-- _class: section -->
 
 # 2. Les bases du traitement automatique du langage
@@ -266,17 +271,17 @@ Un **token** = l'unité de base que le modèle traite. Ce n'est **pas forcément
 
 <br>
 
-*"J'adore l'intelligence artificielle !"*
+B
 
 | Découpage | Résultat |
 |---|---|
-| Par mot | `[J', adore, l', intelligence, artificielle, !]` |
-| Par sous-mot (BPE) | `[J', ador, ##e, l', intel, ##ligence, ...]` |
+| Par mot | `[J', adore, ce, cours, !]` |
+| Par sous-mot (BPE) | `[J', ador, ##e, ce, cours, !]` |
 | Par caractère | `[J, ', a, d, o, r, e, ...]` |
 
 <br>
 
-Les LLMs modernes utilisent le **sous-mot** (BPE, SentencePiece). Vocabulaires de 50k–100k tokens.
+Les LLMs modernes utilisent le **sous-mot** (WordPiece, SentencePiece, BPE). Vocabulaires de 30k–100k tokens.
 
 ---
 
@@ -284,9 +289,9 @@ Les LLMs modernes utilisent le **sous-mot** (BPE, SentencePiece). Vocabulaires d
 
 <br>
 
-**Par caractère** ❌ — séquences très longues, pas de sémantique portée
-**Par mot entier** ❌ — mots rares, nouvelles entités, formes fléchies (`courons`, `courais`…)
-**Par sous-mot** ✅ — bon compromis : vocabulaire fini, mots inconnus décomposables
+**Par caractère** — séquences très longues, pas de sémantique
+**Par mot entier** — mots rares, néologismes, formes fléchies (`courons`, `courais`…)
+**Par sous-mot** — bon compromis : vocabulaire fini, mots inconnus décomposables, formes fléchies rassemblées
 
 <br>
 
@@ -297,7 +302,7 @@ Les LLMs modernes utilisent le **sous-mot** (BPE, SentencePiece). Vocabulaires d
 
 <br>
 
-On verra BPE en détail en **séance 2**.
+On verra les algorithmes de tokenization dont BPE en détail en **séance 2**.
 
 ---
 
@@ -312,7 +317,7 @@ Deux techniques pour **normaliser** les formes d'un mot.
 "courais", "courons", "courir"  →  "cour"   ← pas un vrai mot !
 ```
 
-**Lemmatisation** — forme canonique, tient compte du contexte grammatical
+**Lemmatisation** — forme canonique, tient compte du contexte grammatical, mais coûteux
 ```
 "courais", "courons", "courir"  →  "courir"
 "meilleures", "meilleur"        →  "bon"   ← le lemme de "meilleur" !
@@ -369,6 +374,11 @@ Rang 100: ...    → très rare
 - Les modèles doivent gérer des données très déséquilibrées
 
 ---
+## La loi de Zipf
+
+<center><img width="700px" src="../imgs/course1/brownzipf.png"/></center>
+
+---
 
 <!-- _class: quiz -->
 
@@ -419,7 +429,7 @@ le lemme serait `aller`.
 
 ---
 
-## C'est quoi, apprendre ?
+## C'est quoi, l'apprentissage machine ?
 
 Un modèle ML = une **fonction paramétrique**.
 
@@ -431,7 +441,7 @@ $$\hat{y} = f(x\,;\,\theta)$$
 
 - $x$ = entrée (texte, image…)
 - $\hat{y}$ = prédiction du modèle
-- $\theta$ = **paramètres** (poids) — des millions voire milliards de nombres
+- $\theta$ = **paramètres** (poids) — des millions voire milliards de variables à calibrer
 
 <br>
 
@@ -455,16 +465,21 @@ C'est la **cross-entropy**. Plus $\mathcal{L}$ est faible, mieux le modèle pré
 
 **Objectif** : trouver $\theta^*$ tel que $\mathcal{L}$ soit minimale sur les données d'entraînement.
 
+**Discussion** : comment trouver le minimum (s'il existe) de la fonction de perte ? 
 ---
 
 ## Descente de gradient
 
-Idée : se déplacer dans la direction qui **réduit** la perte.
+L'objectif est de trouver le minimum de la fonction de perte, mais dans le cas des réseaux de neurones, cette fonction est la fonction est très complexe, non linéaire et multidimensionnelle.
+Il impossible de résoudre ce problème directement avec la formule exacte "dérivée = 0". 
+
+Idée : se déplacer dans la direction qui **réduit** la fonction de perte.
 
 $$\theta \leftarrow \theta - \alpha \cdot \frac{\partial \mathcal{L}}{\partial \theta}$$
 
-- $\alpha$ = **learning rate** (taux d'apprentissage) — hyperparamètre crucial
+- $\alpha$ = **learning rate** (taux d'apprentissage), un hyperparamètre crucial
 - $\frac{\partial \mathcal{L}}{\partial \theta}$ = gradient = direction de la pente ascendante
+- on se déplace à chaque étape de l'apprentissage en direction - $\frac{\partial \mathcal{L}}{\partial \theta} x \alpha$ 
 
 <br>
 
@@ -502,8 +517,8 @@ Le modèle **mémorise** les données d'entraînement au lieu d'en apprendre les
 
 | | Train accuracy | Test accuracy |
 |---|---|---|
-| ✅ Bon modèle | 92% | 89% |
-| ❌ Overfitting | 99% | 62% |
+| Bon modèle | 92% | 89% |
+| Overfitting | 99% | 62% |
 
 <br>
 
@@ -511,7 +526,7 @@ Le modèle **mémorise** les données d'entraînement au lieu d'en apprendre les
 - **Dropout** : désactiver des neurones aléatoirement pendant l'entraînement
 - **Weight decay** : pénaliser les poids trop grands ($L_2$ régularisation)
 - **Early stopping** : arrêter quand la validation stagne
-- **Plus de données** : le remède le plus efficace
+- **Plus de données** : (et des données plus diverses et représentatives), le remède le plus efficace
 
 ---
 
@@ -557,10 +572,15 @@ Trois générations de méthodes :
 | 3️⃣ | BERT, GPT (Transformers) | ✅✅ contextuelle |
 
 ---
+## Représentations vectorielles (embeddings)
+
+<center><img width="500px" src="../imgs/course1/embeddings.png"/></center>
+
+---
 
 ## One-Hot Encoding
 
-Chaque mot = un vecteur avec un **1** à sa position dans le vocabulaire.
+Chaque mot = un vecteur de la taille du vocabulaire avec un **1** à sa position dans le vocabulaire, et des **0** partout ailleurs.
 
 <br>
 
@@ -598,7 +618,7 @@ BoW = [1, 0, 1, 1, 0, 2]
 
 ✅ Simple, fonctionne pour la classification de documents
 ❌ L'ordre des mots est perdu :
-*"Le chat mange le poisson"* = *"Le poisson mange le chat"* 😬
+*"Le chat mange le poisson"* = *"Le poisson mange le chat"* 
 
 ---
 
@@ -620,17 +640,21 @@ $$\text{TF-IDF}(t, d) = \underbrace{\text{TF}(t,d)}_{\text{fréq. dans le doc}} 
 *"transformer"*, *"tokenisation"* → IDF élevé → très informatifs
 
 ---
+## TF-IDF
+
+<center><img width="800px" src="../imgs/course1/tfidf.png"/></center>
+---
 
 ## Word2Vec — Le tournant (2013)
 
-**Mikolov et al., Google, 2013** — probablement le papier en TAL le plus influent avant les Transformers.
+**Mikolov et al., Google, 2013** (probablement le papier en TAL le plus influent avant les Transformers).
 
 <br>
 
 **Idée clé** (Firth, 1957) :
 > *"A word is known by the company it keeps."*
 
-Le sens d'un mot peut être inféré des mots qui l'**entourent**.
+Le sens d'un mot peut être inféré en regardant les mots qui l'**entourent**.
 
 <br>
 
@@ -639,7 +663,13 @@ Word2Vec entraîne un petit réseau sur une tâche simple :
 - **CBOW** : étant donné le contexte, prédire le mot central
 
 ---
+## Word2Vec — Comment ça marche
 
+Apprend les représentations vectorielles des mots **sans supervision**.
+<br>
+<center><img width="700px" src="../imgs/course1/cbow_skipgram.png"/></center>
+
+---
 ## Word2Vec — Comment ça marche
 
 **Skip-gram** sur la phrase *"Le [chat] dort sur le tapis"* :
@@ -656,7 +686,7 @@ Prédire : "Le", "dort", "sur", "le"
 
 Le réseau apprend des **vecteurs denses** (100–300 dimensions) pour chaque mot.
 
-La magie : deux mots qui apparaissent dans des **contextes similaires** auront des vecteurs proches.
+Cohérence sémantique : deux mots qui apparaissent dans des **contextes similaires** auront des vecteurs proches.
 
 ---
 
@@ -669,20 +699,27 @@ vecteur("roi") - vecteur("homme") + vecteur("femme")
 
 <br>
 
-Les directions dans l'espace vectoriel ont un **sens** :
+Certaines directions dans l'espace vectoriel ont un **sens** :
 - Direction **genre** : roi → reine, acteur → actrice
 - Direction **capitale** : France → Paris, Allemagne → Berlin
 - Direction **pluriel** : chat → chats, chien → chiens
 
 <br>
 
-Ce n'est pas de la magie — c'est une conséquence statistique de l'entraînement sur des milliards de phrases.
+Conséquence statistique de l'entraînement sur des milliards de phrases.
+
+---
+## Espace latent (vectoriel)
+
+<br>
+<center><img width="700px" src="../imgs/course1/latent_space.png"/></center>
+
 
 ---
 
 <!-- _class: quiz -->
 
-## 🧩 Quiz 3 — En binôme (2 min)
+## 🧩 Quiz 3 
 
 <br>
 
@@ -694,7 +731,6 @@ $$\text{vecteur("Paris")} - \text{vecteur("France")} + \text{vecteur("Allemagne"
 
 <br>
 
-*Discutez avec votre voisin·e. Réponse dans 2 minutes.*
 
 ---
 
@@ -715,9 +751,9 @@ Berlin  - Allemagne = vecteur("est la capitale de")
 
 <br>
 
-> **Limite critique de Word2Vec** : les embeddings sont **statiques** — un seul vecteur par mot.
-> Le mot *"banque"* a le **même vecteur** qu'il s'agisse d'une banque financière ou d'une rive.
-> → C'est ce que BERT & GPT vont résoudre.
+> **Limite critique de Word2Vec** : les embeddings sont **statiques** : un seul vecteur par mot.
+> Le mot *"batterie"* a le **même vecteur** qu'il s'agisse de l'instrument de musique ou de la pile électrique. 
+> → C'est ce que les Transformers vont résoudre.
 
 ---
 
@@ -733,14 +769,13 @@ Berlin  - Allemagne = vecteur("est la capitale de")
 
 <br>
 
-FastText est particulièrement robuste sur les **langues morphologiquement riches** (allemand, finnois, arabe…) et les mots hors-vocabulaire.
+FastText est particulièrement robuste sur les **langues morphologiquement riches** (allemand, finnois, arabe…) et les mots hors-vocabulaire (néologismes).
 
 ---
 
 <!-- _class: section -->
 
 # 5. Les RNNs
-## Une étape intermédiaire nécessaire
 
 ---
 
@@ -763,6 +798,9 @@ x₃ → [RNN] → h₃    (h₂ alimente h₃)
 
 Intuitif : on lit la phrase mot à mot, la compréhension s'accumule.
 
+---
+## Réseaux Récurrents (RNNs)
+<center><img width="1000px" src="../imgs/course1/rnn.svg"/></center>
 ---
 
 ## Le problème du gradient qui disparaît
@@ -806,17 +844,26 @@ Au lieu de traiter les tokens un par un, permettre à **chaque token de regarder
 <br>
 
 Avantages immédiats :
-- ✅ **Parallélisation** totale → entraînement massivement accéléré sur GPU
-- ✅ **Dépendances longue distance** capturées sans dégradation
-- ✅ Scalabilité : plus de paramètres = meilleur modèle (jusqu'à un certain point)
+- **Parallélisation** totale → entraînement massivement accéléré sur GPU
+- **Dépendances longue distance** capturées sans dégradation
+- **Scalabilité** : plus de paramètres = meilleur modèle (jusqu'à un certain point)
 
+---
+## L'architecture transformer
+
+<center><img width="800px" src="../imgs/course1/transformers.png"/></center>
 ---
 
 ## Le mécanisme d'Attention
 
 **Intuition** : pour comprendre *"il"* dans *"Le chat s'est couché. Il ronronne."*, le modèle doit faire attention à *"chat"* quelques tokens plus tôt.
 
+Le mécanisme d'attention permet à un modèle de langage de pondérer l'importance relative de chaque mot par rapport aux autres. Concrètement, pour chaque mot, le modèle calcule un score de pertinence avec tous les autres mots, ce qui lui permet de "focaliser" son interprétation sur les parties les plus utiles du contexte.
+
 <br>
+---
+
+## Le mécanisme d'Attention
 
 Chaque token produit **3 vecteurs** :
 
@@ -826,6 +873,11 @@ Chaque token produit **3 vecteurs** :
 | **Key (K)** | "Qu'est-ce que je représente ?" |
 | **Value (V)** | "Quelle information j'apporte ?" |
 
+<br>
+
+**Analogie** : Imagine une bibliothèque : Tu arrives avec une requête (Query) : "Je cherche un livre sur les réseaux de neurones". Chaque livre a une étiquette au dos (Key) : "Machine Learning", "Cuisine", "Histoire"... Le contenu du livre (Value) : c'est ce que tu liras vraiment si tu le choisis.
+<br>
+En pratique les Q, K, V pour chaque tokens sont des vecteurs entraînés pour que les bonnes paires se ressemblent. C'est le modèle qui apprend ce que "chercher" et "proposer" veulent dire.
 ---
 
 ## Attention — Le calcul
@@ -844,9 +896,17 @@ La division par $\sqrt{d_k}$ évite que les produits scalaires deviennent trop g
 
 ---
 
-## Attention — Pourquoi ça marche
+### Self-Attention (Auto-attention)
+Chaque mot d'une séquence calcule **son** attention sur tous les autres mots de cette **même séquence** pour enrichir sa représentation en tenant compte du contexte.
+
+<center><img width="900px" src="../imgs/course1/self_attention.svg"/></center>
+
+---
+
+## Self-Attention — Pourquoi ça marche
 
 Tous ces calculs se font **en parallèle** via des multiplications matricielles.
+Le modèle ne requiert pas de supervision ou annotation manuelle. Chaque token apprend sa représentation à partir de son contexte.
 
 ```
 Attention(Q, K, V) = softmax(QKᵀ / √dₖ) · V
@@ -902,7 +962,11 @@ Dans le papier original : fonctions sinus/cosinus à différentes fréquences.
 Les modèles modernes apprennent souvent ces positions directement (RoPE, ALiBi…).
 
 ---
+## Architecture complète
 
+<center><img width="800px" src="../imgs/course1/transformers.png"/></center>
+
+---
 ## Architecture complète
 
 ```
@@ -957,91 +1021,6 @@ Pourquoi les Transformers s'entraînent-ils **plus vite** que les RNNs sur GPU ?
 
 ---
 
-<!-- _class: section -->
-
-# 7. Pré-entraînement & Fine-tuning
-
----
-
-## La logique des LLMs modernes
-
-<br>
-
-**Étape 1 — Pré-entraînement** : tâche non supervisée, immense corpus
-**Étape 2 — Fine-tuning** : adaptation à une tâche spécifique
-
-<br>
-
-```
-[Texte brut du web]            [Données annotées]
-        ↓                              ↓
-[Pré-entraînement]  →  [Modèle]  →  [Fine-tuning]  →  [Modèle spécialisé]
-   (semaines/mois)    général       (heures/jours)
-```
-
-<br>
-
-**Pourquoi cette séparation ?** Le pré-entraînement est coûteux mais ne se fait qu'une fois. Le fine-tuning est rapide et cheap.
-
----
-
-## Pré-entraînement : prédire le prochain token
-
-Pour un modèle décodeur (type GPT), la tâche est :
-
-> **Étant donné tous les tokens précédents, prédire le suivant.**
-
-<br>
-
-```
-Input  : "Le chat est assis sur le"
-Cible  : "tapis"
-```
-
-<br>
-
-- Aucune annotation humaine nécessaire — tout texte est une donnée gratuite
-- GPT-3 : ~300 milliards de tokens d'entraînement
-- LLaMA 3 : ~15 000 milliards de tokens
-
----
-
-## Ce que le modèle apprend implicitement
-
-En apprenant à prédire la suite, le modèle doit **modéliser** :
-
-<br>
-
-- La **grammaire** (pour prédire la bonne forme)
-- Les **faits du monde** (Paris est la capitale de la France)
-- Le **raisonnement** (si A alors B)
-- Le **style** et le **ton**
-- Les **relations entre concepts**
-
-<br>
-
-> *"Les LLMs ne savent pas ce qu'ils savent. Ils savent ce qui est probable."*
-
----
-
-## Fine-tuning
-
-Une fois pré-entraîné, on **spécialise** le modèle.
-
-<br>
-
-| Type | Exemple |
-|---|---|
-| **SFT** (Supervised FT) | Paires (instruction, réponse souhaitée) |
-| **Domain FT** | Textes médicaux, juridiques, financiers |
-| **RLHF** | Feedback humain → préférences → alignement |
-
-<br>
-
-On verra SFT, RLHF et DPO en **séance 2**.
-
----
-
 ## Récapitulatif
 
 ```
@@ -1052,10 +1031,6 @@ Séquence de tokens
 Vecteurs denses
     ↓  Transformer (attention)
 Représentations contextuelles
-    ↓  tête de prédiction
-Distribution sur le vocabulaire
-    ↓  sampling / argmax
-Prochain token généré
 ```
 
 ---
@@ -1068,9 +1043,7 @@ Prochain token généré
 - **Lemmatisation** → forme canonique, tient compte du contexte grammatical
 - **Word2Vec** → embeddings statiques, capturent la sémantique par le contexte
 - **Attention** → chaque token peut regarder tous les autres en parallèle
-- **Transformer** → parallélisation + dépendances longue distance
-- **Pré-entraînement** → apprendre le langage sur des milliards de tokens
-- **Fine-tuning** → spécialiser pour une tâche
+- **Transformer** → parallélisation (encoding positionnel) + dépendances longue distance
 
 ---
 
@@ -1085,7 +1058,7 @@ Prochain token généré
 - B) Requête, Clé de correspondance, Contenu à agréger ✓
 - C) Ils sont interchangeables
 
-**3.** Vrai/Faux : Word2Vec résout l'ambiguïté du mot *"banque"*.
+**3.** Vrai/Faux : Word2Vec résout l'ambiguïté du mot *"batterie"*.
 
 **4.** Pourquoi entraîner sur la prédiction du prochain token est-il une bonne façon d'apprendre le langage ?
 
@@ -1111,7 +1084,7 @@ Prochain token généré
 
 ---
 
-## Lab — Aujourd'hui (1h30)
+## Lab — Aujourd'hui (1h-2h)
 
 <br>
 
