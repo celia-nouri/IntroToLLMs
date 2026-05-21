@@ -8,9 +8,9 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 1 — Du texte brut aux Transformers
+## Séance 1 — Du NLP symbolique aux Transformers
 
-**4ème année RO DEV — ESGI Paris**
+**4ème année RO DEV - ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
 Semestre 2, 2025–2026
 
@@ -20,20 +20,20 @@ Semestre 2, 2025–2026
 
 # Plan de la séance
 
-## ~2h de cours + lab Python (3h total)
+## ~2h de cours + lab Python (4h total)
 
 ---
 
 ## Au programme aujourd'hui
 
-1. Pourquoi le langage est difficile ?
-2. Les bases du NLP classique
-3. Rappel Machine Learning & rétropropagation
-4. Représenter les mots : de Bag-of-Words à Word2Vec
+1. Introduction
+2. Les bases du traitement automatique du langage
+3. Rappels : Machine Learning & rétropropagation
+4. Représentations vectorielles des mots : de Bag-of-Words à Word2Vec
 5. L'architecture Transformer
 6. Pré-entraînement & Fine-tuning
 
-> **Objectif** : construire une intuition solide sur le NLP pour comprendre les LLMs dans les séances suivantes
+> **Objectif** : construire une intuition solide sur le TAL (NLP) pour comprendre les LLMs dans les séances suivantes
 
 ---
 
@@ -43,8 +43,8 @@ Semestre 2, 2025–2026
 
 | | |
 |---|---|
-| **Volume** | 15h — 5 séances de 3h |
-| **Format** | ~1h30 cours + ~1h30 lab Python |
+| **Volume** | 20h — 5 séances de 4h |
+| **Format** | ~2h cours + ~2h lab Python |
 | **Éval** | QCM 40 questions (31 juillet) |
 | **Prérequis** | Python, bases ML, APIs REST |
 
@@ -56,28 +56,49 @@ Semestre 2, 2025–2026
 
 <!-- _class: section -->
 
-# 1. Pourquoi le langage est difficile ?
+# 1. Introduction
+
+---
+### Qu'est-ce que le TAL ?
+
+Traitement automatique du langage (naturel, distinction avec le langage informatique ou code).
+> **Discussion** : Qu'est-ce que le TAL ?
 
 ---
 
-## Le langage est ambigu par nature
+### Le langage est ambigu par nature
 
-Le sens d'un mot dépend de son **contexte**.
-
-<br>
-
-> *"Je vois un homme avec un télescope."*
-Qui a le télescope ? Moi ou l'homme ?
-
-> *"La banque est en face."*
-Banque financière, ou rive d'un fleuve ?
-
-> *"C'est pas mal."*
-En français familier → c'est souvent **bien** !
+Le sens n’est pas uniquement contenu dans les mots eux-mêmes : il dépend de la syntaxe, du contexte discursif, de la situation d’énonciation, des connaissances du monde et des intentions du locuteur...
 
 <br>
 
-Le langage n'est **pas un système formel**. C'est ce qui rend le NLP difficile — et fascinant.
+#### Ambiguïté lexicale
+> *"Donne-moi la batterie."*
+L'instrument de musique ? La pile électique ?
+#### Ambiguïté syntaxique
+> *"J'ai vu l'homme avec les jumelles."*
+Qui a les jumelles ? Moi ou l'homme.
+#### Connaissance du monde
+> * "Marc s’est assis, a regardé le menu."
+Sous-entendu : Marc est au restaurant.
+#### Connaissances culturelles
+"C'est pas mal."*
+En français familier, c'est **bien** !
+#### Ironie / Sarcasme
+> Après 2h de retard : "Super, t’es vraiment ponctuel." 
+Sens réel : critique / sens littéral: compliment.
+#### Dépendance au contexte pragmatique
+> "Tu peux ouvrir la fenêtre ?"
+Sens réel : demande d'ouvrir. Sens littéral : capacité d'ouvrir.
+<br>
+
+---
+### Le langage est ambigu par nature
+<br/>
+
+<center>
+<img height="500px" src="../imgs/course1/intro-cartoon.png"/>
+</center>
 
 ---
 
@@ -87,22 +108,155 @@ Pour désambiguïser, il faut comprendre le **contexte**.
 
 <br>
 
-*"La __banque__ accordera un prêt"* → banque financière
-*"La __banque__ est couverte de roseaux"* → rive fluviale
+*"La __batterie__ est déchargée"* → batterie électrique 
+*"La __batterie__ est facile à apprendre"* → l'instrument de musique 
 
 <br>
 
-Les LLMs modernes produisent des **représentations différentes** pour le même mot selon son contexte. C'est la grande avancée par rapport aux méthodes classiques.
+Les LLMs modernes produisent des **représentations différentes** pour le même mot selon son contexte. C'est la grande avancée par rapport aux représentations décontextualisées (pré-transformers). Mais cela ne suffit pas toujours à capturer les subtilités sociales, culturelles, conversationnelles du langage.
 
 <br>
 
-> 🙋 **Discussion** : Donnez un exemple de mot/phrase français·e dont le sens change selon le contexte.
+> **Discussion** : Donnez des exemples de mot/phrase français·e dont le sens change selon le contexte.
 
+---
+### Où trouver des données textuelles ?
+
+> **Discussion** : Quelles sont les sources de données utilisées par le TAL.
+
+<br/>
+
+<center>
+<img width="900px" src="../imgs/course1/bnf.jpg"/>
+</center>
+
+---
+### Les sources de données en TAL
+
+<center><img width="1000px" src="../imgs/course1/wooclap.png"/></center>
+
+---
+### Les sources de données en TAL
+<br/>
+
+<center>
+<img height="450px" src="../imgs/course1/datasources_nlp.png"/>
+</center>
+
+---
+### Historique des avancées en TAL
+
+<center><img width="1000px" src="../imgs/course1/nlp_timeline.png"/></center>
+
+---
+
+### Le TAL en 2025-2026
+<br/>
+
+<center>
+<img width="900px" src="../imgs/course1/chatgpt.png"/>
+</center>
+
+---
+
+### Le TAL en 2025-2026
+
+<center>
+<img width="900px" src="../imgs/course1/copilot.png"/>
+</center>
+
+---
+
+### Le TAL en 2025-2026
+> *Génère une image de l'école d'informatique en alternance à Paris (ESGI) avec le logo de l'école et une bannière.*
+
+<center>
+<img width="350px" src="../imgs/course1/esgi.png"/>
+</center>
+
+---
+
+### Le TAL en 2025-2026
+<center>
+<img width="900px" src="../imgs/course1/google.png"/>
+</center>
+
+
+---
+
+### Le TAL en 2025-2026
+
+<center>
+<img width="850px" src="../imgs/course1/knowgraph_hp.png"/>
+</center>
+
+---
+
+### Le TAL en 2025-2026
+
+<center>
+<img width="1000px" src="../imgs/course1/game_agents.png"/>
+</center>
+
+---
+<!--_class: lead -->
+# Est-ce que les tâches de TAL sont résolues ? <h6>(No.)</h6>
+
+---
+
+### Le TAL en 2025-2026
+
+<center>
+<img width="900px" src="../imgs/course1/prompt_easy.png"/>
+</center>
+
+---
+### Le TAL en 2025-2026
+<br>
+
+<center>
+<img width="900px" src="../imgs/course1/prompt_linear.png"/>
+</center>
+
+---
+### Le TAL en 2025-2026
+
+<center>
+<img width="700px" src="../imgs/course1/prompt_bias.png"/>
+</center>
+
+---
+### Organisation des séances
+<br>
+<br>
+
+<div style="display: flex;">
+    <div style="flex: 66%;">
+        <center>
+        <img width="300px" src="../imgs/course1/celia.jpeg"/></br>
+        Célia <br/> Nouri </center>
+    </div>
+</div>
+
+<center><pre>celia.nouri@inria.fr</pre></center>
+
+---
+### Organisation des séances
+
+– Comprendre l'architecture et le processus d'entraînement d'un LLM moderne
+– Utiliser efficacement un LLM via des techniques de prompting et d'intégration API
+– Concevoir un système RAG (Retrieval-Augmented Generation) fonctionnel
+– Construire un agent simple avec appel d'outils
+– Situer les dernières avancées du domaine (modèles de raisonnement, open source, etc.)
+* Objectives 
+    * ***Connaissances :*** comprendre l'architecture et le processus d'entraînement d'un LLM moderne, et les avancées récentes dans le domaine du TAL.
+    * ***Mise en practice :*** Concevoir un système intégrant des LLMs modernes (RAG : Retrieval-Augmented Generation, agents) fonctionnel
+    * ***Distance Critique :*** Comprendre les limites et problèmes actuels liés aux LLMs, et analyser les méthodes et avancées en maintenant une distance critique.
 ---
 
 <!-- _class: section -->
 
-# 2. Les bases du NLP classique
+# 2. Les bases du traitement automatique du langage
 
 ---
 
@@ -469,7 +623,7 @@ $$\text{TF-IDF}(t, d) = \underbrace{\text{TF}(t,d)}_{\text{fréq. dans le doc}} 
 
 ## Word2Vec — Le tournant (2013)
 
-**Mikolov et al., Google, 2013** — probablement le papier NLP le plus influent avant les Transformers.
+**Mikolov et al., Google, 2013** — probablement le papier en TAL le plus influent avant les Transformers.
 
 <br>
 
