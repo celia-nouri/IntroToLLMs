@@ -1,4 +1,4 @@
-name: Deploy Marp Slides to GitHub Pages
+name: Generate Marp PDF Slides
 
 on:
   push:
@@ -7,12 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -21,43 +15,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Convert Marp slides to HTML
-        uses: docker://marpteam/marp-cli:latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          args: --html --allow-local-files markdown/seance1_slides.md --theme markdown/esgi_theme.css -o output/index.html
-        env:
-          MARP_USER: root
+          node-version: '20'
 
-      - name: Convert Marp slides to PDF
-        uses: docker://marpteam/marp-cli:latest
-        with:
-          args: --pdf --allow-local-files markdown/seance1_slides.md --theme markdown/esgi_theme.css -o slides/generated/seance1_slides.pdf
-        env:
-          MARP_USER: root
+      - name: Install Marp CLI
+        run: npm install -g @marp-team/marp-cli
 
-      - name: Commit generated PDF
+      - name: Convert all slides to PDF
+        run: |
+          mkdir -p slides/generated
+          for f in markdown/seance*_slides.md; do
+            name=$(basename "$f" .md)
+            echo "→ $f"
+            marp --pdf --allow-local-files "$f" \
+              --theme markdown/esgi_theme.css \
+              -o "slides/generated/${name}.pdf"
+          done
+
+      - name: Commit generated PDFs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add slides/generated/seance1_slides.pdf
+          git add slides/generated/*.pdf
           git diff --staged --quiet || git commit -m "chore: update generated PDF slides [skip ci]"
           git push
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: output/
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
