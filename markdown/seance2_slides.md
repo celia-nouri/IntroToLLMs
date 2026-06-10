@@ -647,18 +647,9 @@ Représentations contextuelles
 
 <!-- _class: quiz -->
 
-## 🧩 Quiz final : 5 minutes
+## 🧩 Quiz final : 
 
-**1.** Quelle est la différence entre un token et un mot ?
-
-**2.** Dans l'attention, à quoi servent Q, K et V ?
-- A) Question, Clé de tri, Valeur d'apprentissage
-- B) Requête, Clé de correspondance, Contenu à agréger ✓
-- C) Ils sont interchangeables
-
-**3.** Vrai/Faux : Word2Vec résout l'ambiguïté du mot *"batterie"*.
-
-**4.** Pourquoi entraîner sur la prédiction du prochain token est-il une bonne façon d'apprendre le langage ?
+**Vrai/Faux :** Word2Vec résout l'ambiguïté du mot *"batterie"*.
 
 ---
 
