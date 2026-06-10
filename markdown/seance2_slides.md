@@ -18,9 +18,9 @@ Semestre 2, 2025–2026
 
 ## Au programme aujourd'hui
 
-1. Recap
-2. Représentations vectorielles des mots : de Bag-of-Words à Word2Vec
-3. Les RNNs
+1. Récapitulatif
+2. Représentations vectorielles des mots
+3. Les architectures RNNs
 4. L'architecture Transformer
 
 ---
@@ -42,7 +42,7 @@ Semestre 2, 2025–2026
 
 **3.** Pourquoi retire-t-on les *stop words* dans certaines tâches NLP ?
 
-**4.** Qu'est-ce que la **descente de gradient** ? Écrivez la règle de mise à jour des paramètres.
+**4.** Qu'est-ce que la **descente de gradient** ? Décrivez la règle de mise à jour des paramètres.
 
 **5.** Comment reconnaît-on un modèle en **surapprentissage** (*overfitting*) ?
 
@@ -222,13 +222,6 @@ Certaines directions dans l'espace vectoriel ont un **sens** :
 Conséquence statistique de l'entraînement sur des milliards de phrases.
 
 ---
-## Espace latent (vectoriel)
-
-<br>
-<center><img width="500px" src="../imgs/course1/latent_space.png"/></center>
-
-
----
 
 ## GloVe : Global Vectors (2014)
 
@@ -310,6 +303,14 @@ vecteur("where") = Σ vecteurs des n-grammes
 
 ---
 
+## Espace latent (vectoriel)
+
+<br>
+<center><img width="500px" src="../imgs/course1/latent_space.png"/></center>
+
+
+---
+
 <!-- _class: quiz -->
 
 ## 🧩 Quiz 3 
@@ -350,7 +351,7 @@ Berlin  - Allemagne = vecteur("est la capitale de")
 
 ---
 
-## Autres embeddings statiques
+## Recap méthodes d'embeddings statiques
 
 <br>
 
@@ -661,7 +662,7 @@ Représentations contextuelles
 
 ---
 
-## Ressources clés
+## Ressources 
 
 <br>
 
@@ -676,8 +677,6 @@ Représentations contextuelles
 📖 **CS224n** (Stanford NLP) : cours en ligne gratuit, excellent
 
 <br>
-
-> **Avant la séance 3** : lire l'abstract de *"Attention is All You Need"*.
 
 ---
 
