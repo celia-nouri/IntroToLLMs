@@ -25,7 +25,6 @@ Semestre 2, 2025–2026
 3. Lois de Chinchilla
 4. Instruction tuning  
 5. Alignement : RLHF et DPO 
-6. Évaluation
 
 ---
 
@@ -57,9 +56,15 @@ Le tokenizer est donc la **porte d'entrée** du modèle. Son vocabulaire et ses 
 - le coût d'inférence (plus de tokens = plus cher)
 - les langues bien ou mal traitées
 
+---
+
+## Limites de la tokenisation
+
 <br>
 
 De nombreux comportements étranges des LLMs — erreurs d'orthographe, de comptage, de calcul — s'expliquent en partie par des choix faits au niveau de la tokenization.
+
+Ce n'est pas un problème résolut, il est donc important de savoir comment les algorithmes de tokenisation fonctionnent.
 
 ---
 
@@ -284,9 +289,14 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 | **LLaMA 3** | tiktoken (BPE) | 128 256 | 8 Md – 405 Md |
 | **Mistral** | SentencePiece (BPE) | 32 000 | 7 Md |
 
+
+---
+
+## Comparatif des tokenizers
+
 <br>
 
-*Depuis GPT-4, OpenAI ne publie plus l'architecture ni le nombre de paramètres — seule la taille du vocabulaire est connue (encodages publics via la librairie `tiktoken`).
+> Depuis GPT-4, OpenAI ne publie plus l'architecture ni le nombre de paramètres — seule la taille du vocabulaire est connue (encodages publics via la librairie `tiktoken`).
 
 > Les grands vocabulaires (LLaMA 3, GPT-4/5) améliorent la couverture multilingue et réduisent le nombre de tokens par phrase — la tendance est à la hausse (50k → 200k) au fil des générations.
 
@@ -629,14 +639,17 @@ Réponse     : "Le texte explique que... En résumé..."
 - Mais calculée **uniquement sur les tokens de la réponse**, pas sur l'instruction
 - Beaucoup moins de données que le pré-entraînement : quelques milliers à quelques millions d'exemples, contre des milliards de documents
 
+---
+
+## Supervised Fine-Tuning (SFT)
+
 <br>
 
 On peut aussi caster des tâches NLP "classiques" (classification de sentiment, de toxicité, NLI, résumé, traduction…) en paires texte→texte, et les mélanger aux instructions.
 
 ```
 Tâche classique   : classifier("Ce film est nul") → "négatif"
-Reformulée en SFT : Instruction "Ce commentaire est-il positif ou négatif ? [...]"
-                     Réponse "négatif"
+Reformulée en SFT : Instruction "Ce commentaire est-il positif ou négatif ? [...]" → Réponse "négatif"
 ```
 
 ---
@@ -724,7 +737,7 @@ Objectif d'**alignement** (Anthropic, *HHH*) : un modèle **Helpful, Honest, Har
 
 <br>
 
-<center><img width="750px" src="../imgs/course3/rlhf-ppo1.jpg"/></center>
+<center><img width="500px" src="../imgs/course3/rlhf-ppo1.jpg"/></center>
 
 
 ---
@@ -755,7 +768,7 @@ Le **reward model** est entraîné sur des milliers de comparaisons de ce type, 
 
 <br>
 
-<center><img width="750px" src="../imgs/course3/rlhf-ppo2.jpg"/></center>
+<center><img width="500px" src="../imgs/course3/rlhf-ppo2.jpg"/></center>
 
 ---
 
@@ -765,7 +778,7 @@ Le LLM est ensuite ajusté pour **générer des réponses que le reward model no
 
 <br>
 
-<center><img width="750px" src="../imgs/course3/rlhf-ppo3.jpg"/></center>
+<center><img width="500px" src="../imgs/course3/rlhf-ppo3.jpg"/></center>
 
 ---
 
@@ -822,7 +835,7 @@ DPO : ajuster le LLM pour augmenter P(réponse préférée)
 
 <br>
 
-<center><img width="750px" src="../imgs/course3/Rlhf-DPO.jpg"/></center>
+<center><img width="850px" src="../imgs/course3/Rlhf-DPO.jpg"/></center>
 
 
 ---
