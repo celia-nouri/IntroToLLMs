@@ -37,16 +37,17 @@ Semestre 2, 2025–2026
 
 ## Rappel : pourquoi tokeniser ?
 
-Un LLM ne lit pas du texte — il lit une **séquence d'entiers**.
+Les ordinateurs (et les LLMs) ne traitent pas le texte directement —-> il faut d'abord convertir le texte en une **séquence de vecteurs**.
+
 
 <br>
 
 ```
-"ChatGPT est utile"
+"J'adore le foot"
       ↓  tokenizer
-  [14526, 38, 920, 374, 5505]
+  ["J'", "adore", " le", " foot"]  →  [4083, 26576, 513, 6821]
       ↓  embeddings
-  [v₁, v₂, v₃, v₄, v₅]   ← vecteurs denses
+  [v₁, v₂, v₃, v₄]   ← vecteurs denses
 ```
 
 <br>
@@ -55,6 +56,10 @@ Le tokenizer est donc la **porte d'entrée** du modèle. Son vocabulaire et ses 
 - les performances du modèle
 - le coût d'inférence (plus de tokens = plus cher)
 - les langues bien ou mal traitées
+
+<br>
+
+De nombreux comportements étranges des LLMs — erreurs d'orthographe, de comptage, de calcul — s'expliquent en partie par des choix faits au niveau de la tokenization.
 
 ---
 
@@ -70,7 +75,53 @@ Le tokenizer est donc la **porte d'entrée** du modèle. Son vocabulaire et ses 
 
 <br>
 
-Les LLMs modernes utilisent tous une approche **sous-mot** apprise depuis les données. Les trois algorithmes principaux : **BPE**, **WordPiece**, **Unigram**.
+Les LLMs modernes utilisent tous une approche **sous-mot** apprise depuis les données.
+
+---
+
+## Le tokenizer moderne : un objet entraîné
+
+```
+"i am loving it!"  →  ["i", "am", "lov", "##ing", "it", "!"]
+```
+
+<br>
+
+- Découpage au niveau **sous-mot** (ni mot entier, ni caractère isolé)
+- **Vocabulaire fixe**, appris une fois pour toutes
+- **Entraîné** sur un grand échantillon de texte, avant même le pré-entraînement du modèle
+- Utilisé ensuite en mode **inférence**, comme étape de **pré-traitement** (jamais ré-entraîné avec le modèle)
+
+<br>
+
+Les trois algorithmes principaux pour l'entraîner : **BPE**, **WordPiece**, **Unigram**.
+
+---
+
+## Granularité
+
+<br>
+
+<center><img width="750px" src="../imgs/course2/token_graph.png"/></center>
+
+---
+
+## Granularité : un compromis
+
+→ Compromis entre **séquences courtes** (peu de tokens) et **taille de vocabulaire raisonnable**.
+
+<br>
+
+<ins>Fertilité</ins> — pour une séquence de texte $S$ :
+
+$$
+\text{fertilité}(S) = \frac{\#\text{ tokens}}{\#\text{ mots}}
+$$
+
+<br>
+
+- Fertilité proche de **1** : peu de découpage, mais vocabulaire énorme et sensible aux mots rares (OOV)
+- Fertilité élevée : vocabulaire compact, mais séquences plus longues → plus cher, contexte rempli plus vite
 
 ---
 
@@ -91,34 +142,52 @@ Les LLMs modernes utilisent tous une approche **sous-mot** apprise depuis les do
 
 <br>
 
-On obtient une liste ordonnée de **règles de fusion** (*merge rules*).
-
-**Inférence** : appliquer les règles dans l'ordre appris.
+On obtient une liste ordonnée de **règles de fusion** (*merge rules*), appliquées dans l'ordre à l'inférence.
 
 ---
 
-## BPE — Exemple pas à pas
+## BPE — Exemple pas à pas (1/2)
 
-Corpus : `"low low low lowest newest"`
-Vocabulaire initial : `l o w e s t n </w>`
+Encodons `"aaabdaaabac"` :
 
 <br>
 
 ```
-Étape 1 — paires fréquentes : (l,o)×4  (o,w)×5  (w,</w>)×3 …
-          → fusionner (o,w) → ow
-          new vocab : l ow e s t n </w>
-
-Étape 2 — (l,ow)×4 … → fusionner (l,ow) → low
-          new vocab : low e s t n </w>
-
-Étape 3 — (low,</w>)×3 → fusionner → low</w>
-          ...
+Paires observées : {aa, ab, bd, da, ba, ac}
+Occurrences      : {aa: 4, ab: 2, bd: 1, da: 1, ba: 1, ac: 1}
+→ règle 1 : aa → X       "aaabdaaabac" devient "XabdXabac"
 ```
 
 <br>
 
-À l'inférence : `"lowest"` → `["low", "e", "st"]` en appliquant les règles dans l'ordre.
+```
+Paires observées : {Xa, ab, bd, dX, ba, ac}
+Occurrences      : {Xa: 2, ab: 2, bd: 1, dX: 1, ba: 1, ac: 1}
+→ règle 2 : ab → Y       "XabdXabac" devient "XYdXYac"
+```
+
+On recommence : compter les paires, fusionner la plus fréquente, répéter.
+
+---
+
+## BPE — Exemple pas à pas (2/2)
+
+```
+Paires observées : {XY, Yd, dX, Ya, ac}
+Occurrences      : {XY: 2, Yd: 1, dX: 1, Ya: 1, ac: 1}
+→ règle 3 : XY → Z       "XYdXYac" devient "ZdZac"
+
+Paires observées : {Zd, dZ, Za, ac}  → toutes uniques → FIN
+```
+
+<br>
+
+**Résultat** : `"aaabdaaabac"` → `"ZdZac"`, avec les règles de fusion :
+`1) aa→X   2) ab→Y   3) XY→Z`
+
+<br>
+
+**Décodage** : appliquer les règles dans l'ordre **inverse**.
 
 ---
 
@@ -130,7 +199,19 @@ Variante utilisée par **GPT-2, GPT-3, GPT-4, RoBERTa, LLaMA** :
 
 - Vocabulaire de base = **256 bytes** (couvre tout l'Unicode)
 - **Jamais de token inconnu** : n'importe quel texte, dans n'importe quelle langue ou encodage, est représentable
-- Les fusions se font sur des séquences d'octets, pas de caractères
+
+<br>
+
+**Les fusions se font sur des octets, pas sur des caractères.**
+
+En UTF-8, un caractère peut occuper **plusieurs octets** : `"é"` = 2 octets (`0xC3 0xA9`), un emoji comme `"🤖"` = 4 octets. Le BPE classique partirait d'un vocabulaire de caractères Unicode (~150 000 possibles) — trop grand, et incomplet.
+
+En partant des **256 octets bruts**, le vocabulaire de départ reste petit et fixe, quelle que soit la langue. L'algorithme apprend ensuite à **fusionner des octets fréquents** — parfois ceux d'un même caractère (`0xC3 0xA9` → `"é"`), parfois ceux de plusieurs caractères qui vont souvent ensemble.
+
+
+---
+
+## Byte-level BPE (exemple)
 
 <br>
 
@@ -166,32 +247,9 @@ On fusionne $A$ et $B$ si les voir ensemble est plus probable que les voir sépa
 
 ---
 
-## Unigram Language Model
-
-Algorithme utilisé par **T5, ALBERT, mBART** (via SentencePiece).
-
-<br>
-
-**Logique inverse de BPE** :
-
-```
-1. Partir d'un très grand vocabulaire (sur-ensemble)
-2. Calculer la probabilité de chaque token dans un modèle unigramme
-3. Supprimer les tokens dont la suppression augmente le moins la perte
-4. Répéter jusqu'à atteindre la taille cible
-```
-
-<br>
-
-**Segmentation** : à l'inférence, on cherche le découpage qui **maximise la probabilité** $\prod_i P(t_i)$ → algorithme de Viterbi.
-
-Permet plusieurs découpages possibles : utile pour la **data augmentation** à l'entraînement.
-
----
-
 ## SentencePiece
 
-Bibliothèque de **Kudo & Richardson (2018, Google)** qui implémente BPE *et* Unigram.
+Bibliothèque de **Kudo & Richardson (2018, Google)**, utilisée pour entraîner et appliquer le tokenizer de **LLaMA** et **Mistral**.
 
 <br>
 
@@ -208,7 +266,6 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 **Avantages** :
 - Universel : pas d'hypothèse sur les espaces (chinois, japonais, thaï…)
 - Déterministe et réversible : on peut toujours retrouver le texte original
-- Utilisé par **LLaMA 1/2, Mistral, Gemma, T5**
 
 ---
 
@@ -216,19 +273,22 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 
 <br>
 
-| Modèle | Tokenizer | Taille vocab |
-|---|---|---|
-| **GPT-2 / GPT-3** | Byte-level BPE | 50 257 |
-| **GPT-4 / Claude** | Byte-level BPE (tiktoken) | ~100 000 |
-| **BERT** | WordPiece | 30 522 |
-| **LLaMA 1/2** | SentencePiece (BPE) | 32 000 |
-| **LLaMA 3** | tiktoken (BPE) | 128 256 |
-| **T5 / FLAN** | SentencePiece (Unigram) | 32 100 |
-| **Mistral** | SentencePiece (BPE) | 32 000 |
+| Modèle | Tokenizer | Taille vocab | Paramètres |
+|---|---|---|---|
+| **GPT-2** (2019) | Byte-level BPE (`gpt2`) | 50 257 | 124M – 1,5 Md |
+| **GPT-3** (2020) | Byte-level BPE (`p50k_base`) | 50 281 | 125M – 175 Md |
+| **GPT-4** (2023) | Byte-level BPE (`cl100k_base`) | ~100 000 | non communiqué* |
+| **GPT-5** (2025) | Byte-level BPE (`o200k_base` ou successeur) | ~200 000 | non communiqué* |
+| **BERT** | WordPiece | 30 522 | 110M – 340M |
+| **LLaMA 1/2** | SentencePiece (BPE) | 32 000 | 7 Md – 70 Md |
+| **LLaMA 3** | tiktoken (BPE) | 128 256 | 8 Md – 405 Md |
+| **Mistral** | SentencePiece (BPE) | 32 000 | 7 Md |
 
 <br>
 
-> Les grands vocabulaires (LLaMA 3, GPT-4) améliorent la couverture multilingue et réduisent le nombre de tokens par phrase.
+*Depuis GPT-4, OpenAI ne publie plus l'architecture ni le nombre de paramètres — seule la taille du vocabulaire est connue (encodages publics via la librairie `tiktoken`).
+
+> Les grands vocabulaires (LLaMA 3, GPT-4/5) améliorent la couverture multilingue et réduisent le nombre de tokens par phrase — la tendance est à la hausse (50k → 200k) au fil des générations.
 
 ---
 
@@ -263,9 +323,7 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 
 **2.** Pourquoi le *byte-level* BPE ne produit-il jamais de token `[UNK]` ?
 
-**3.** Vrai / Faux : SentencePiece nécessite de séparer les mots par des espaces avant de tokeniser.
-
-**4.** Un modèle avec un vocabulaire de 128k tokens traite-t-il les textes multilingues mieux ou moins bien qu'un modèle avec 32k tokens ? Pourquoi ?
+**3.** Un modèle avec un vocabulaire de 128k tokens traite-t-il les textes multilingues mieux ou moins bien qu'un modèle avec 32k tokens ? Pourquoi ?
 
 ---
 
@@ -279,7 +337,7 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 
 **3.** **Faux.** SentencePiece encode l'espace comme un caractère `▁`, ce qui lui permet de fonctionner sur du texte brut sans pré-tokenisation.
 
-**4.** Mieux — un grand vocabulaire alloue plus de tokens aux langues non-latines, réduisant le nombre de tokens par phrase et améliorant la représentation.
+**3.** Mieux (en principe) — un grand vocabulaire alloue plus de tokens aux langues non-latines, réduisant le nombre de tokens par phrase et améliorant la représentation. Mais cela dépend du jeu de données d'entraînement du tokenizer.
 
 ---
 
@@ -347,7 +405,7 @@ En apprenant à prédire la suite, le modèle doit **modéliser** :
 
 <br>
 
-> *"Les LLMs ne savent pas ce qu'ils savent. Ils savent ce qui est probable."*
+Les LLMs ne "savent" rien au sens factuel — ils modélisent ce qui est **probable**, pas ce qui est vrai.
 
 ---
 
@@ -378,38 +436,15 @@ Le web brut est plein de **doublons, spam, texte de mauvaise qualité, contenus 
 **Pipeline typique de nettoyage** :
 ```
 Filtrage de langue → Déduplication → Filtrage qualité (heuristiques + classifieur)
-→ Suppression PII → Filtrage contenu toxique/NSFW → Mélange des sources
+→ Suppression des PII (données personnelles) → Filtrage contenu toxique/NSFW → Mélange des sources
 ```
 
 <br>
 
 **Deux risques concrets** :
-- **Contamination** : si des benchmarks d'évaluation fuitent dans les données d'entraînement, le modèle les "a déjà vus" → scores gonflés (section 6)
+- **Contamination** : si des benchmarks d'évaluation fuitent dans les données d'entraînement, le modèle les "a déjà vus" → scores gonflés (on en parlera plus tard)
 - **Droit d'auteur** : procès *New York Times vs OpenAI* (2023) — utiliser des textes protégés pour l'entraînement est-il légal ? Question encore non tranchée juridiquement.
 
----
-
-## L'infrastructure : entraîner à l'échelle
-
-<br>
-
-Un modèle comme GPT-4 ou LLaMA 3 ne tient pas sur un seul GPU — il faut **paralléliser** :
-
-<br>
-
-| Type de parallélisme | Principe |
-|---|---|
-| **Data parallelism** | Même modèle, batches différents sur chaque GPU |
-| **Tensor parallelism** | Une même couche est découpée entre plusieurs GPU |
-| **Pipeline parallelism** | Les couches du modèle sont réparties sur différents GPU |
-
-<br>
-
-Ordres de grandeur : **des milliers de GPU**, plusieurs **mois** d'entraînement, coûts estimés à **plusieurs dizaines de millions de dollars** pour les plus gros modèles.
-
-<br>
-
-> Question naturelle : avec un budget de calcul fixé, comment répartir entre **taille du modèle** et **quantité de données** ? → Lois de Chinchilla.
 
 ---
 
@@ -423,8 +458,6 @@ Ordres de grandeur : **des milliers de GPU**, plusieurs **mois** d'entraînement
 
 **2.** Citez un risque concret lié à des données d'entraînement mal nettoyées.
 
-**3.** Quel type de parallélisme découpe une **même couche** du modèle entre plusieurs GPU ?
-
 ---
 
 <!-- _class: quiz -->
@@ -433,9 +466,8 @@ Ordres de grandeur : **des milliers de GPU**, plusieurs **mois** d'entraînement
 
 **1.** La cible (le token suivant) est déjà présente dans le texte lui-même — tout texte brut fournit ses propres paires (input, cible) gratuitement.
 
-**2.** Contamination des benchmarks (scores gonflés artificiellement) ou violation de droits d'auteur (ex. procès NYT vs OpenAI).
+**2.** Contenus toxiques (racisme, sexisme) appris par le modèle, contamination des benchmarks (scores gonflés artificiellement) ou violation de droits d'auteur (ex. procès NYT vs OpenAI).
 
-**3.** Le **tensor parallelism**.
 
 ---
 
@@ -535,9 +567,7 @@ Les lois de Chinchilla optimisent le coût de **l'entraînement**. Mais un modè
 
 **1.** Quelle est la principale différence entre les conclusions de Kaplan et al. (2020) et Hoffmann et al. (2022) ?
 
-**2.** Chinchilla (70B) surpasse Gopher (280B) à calcul d'entraînement égal. Pourquoi n'est-ce pas contre-intuitif une fois qu'on connaît la loi de Chinchilla ?
-
-**3.** Pourquoi une entreprise pourrait-elle choisir d'entraîner un modèle **au-delà** de l'optimum Chinchilla ?
+**2.** LLaMA a choisi d'entraîner des modèles plus petits que l'optimum Chinchilla, mais sur beaucoup plus de tokens que recommandé, quitte à dépenser plus de calcul à l'entraînement. Quel intérêt à long terme justifie ce choix ?
 
 ---
 
@@ -547,9 +577,8 @@ Les lois de Chinchilla optimisent le coût de **l'entraînement**. Mais un modè
 
 **1.** Kaplan et al. priorisaient la taille du modèle ; Hoffmann et al. montrent que taille du modèle et quantité de données doivent croître **ensemble** (~20 tokens/paramètre).
 
-**2.** Gopher était sous-entraîné par rapport à sa taille (300B tokens pour 280B params, largement sous la règle des 20:1) ; Chinchilla respecte ce ratio et exploite mieux le même budget de calcul.
 
-**3.** Pour réduire le **coût d'inférence** à long terme : un modèle plus petit et sur-entraîné coûte plus cher à produire mais beaucoup moins cher à faire tourner en production, à qualité égale.
+**2.** Pour réduire le **coût d'inférence** à long terme : un modèle plus petit et sur-entraîné coûte plus cher à produire mais beaucoup moins cher à faire tourner en production, à qualité égale.
 
 ---
 
@@ -600,6 +629,16 @@ Réponse     : "Le texte explique que... En résumé..."
 - Mais calculée **uniquement sur les tokens de la réponse**, pas sur l'instruction
 - Beaucoup moins de données que le pré-entraînement : quelques milliers à quelques millions d'exemples, contre des milliards de documents
 
+<br>
+
+On peut aussi caster des tâches NLP "classiques" (classification de sentiment, de toxicité, NLI, résumé, traduction…) en paires texte→texte, et les mélanger aux instructions.
+
+```
+Tâche classique   : classifier("Ce film est nul") → "négatif"
+Reformulée en SFT : Instruction "Ce commentaire est-il positif ou négatif ? [...]"
+                     Réponse "négatif"
+```
+
 ---
 
 ## D'où viennent ces datasets d'instructions ?
@@ -613,9 +652,6 @@ Réponse     : "Le texte explique que... En résumé..."
 | **Alpaca** (Stanford, 2023) | 52k instructions générées via Self-Instruct (avec GPT-3), utilisées pour fine-tuner LLaMA | Modèle instruction-tuned pour ~600$ de coût API |
 | **Dolly / OpenAssistant** | Instructions rédigées par des humains (employés, volontaires) | Données 100% humaines, ouvertes |
 
-<br>
-
-> Self-Instruct illustre une idée puissante : **utiliser un LLM pour générer les données qui entraînent le suivant**.
 
 ---
 
@@ -629,7 +665,6 @@ Réponse     : "Le texte explique que... En résumé..."
 
 **2.** Sur quels tokens calcule-t-on la perte pendant le SFT : l'instruction, la réponse, ou les deux ?
 
-**3.** Qu'est-ce que **Self-Instruct** propose de nouveau par rapport à FLAN ?
 
 ---
 
@@ -640,8 +675,6 @@ Réponse     : "Le texte explique que... En résumé..."
 **1.** Il n'a appris qu'à **continuer du texte** de la même manière que sur le web ; rien ne le pousse à *répondre* plutôt qu'à *continuer la liste de questions*.
 
 **2.** Uniquement sur les tokens de la **réponse** — l'instruction sert de contexte, pas de cible à prédire.
-
-**3.** Générer les instructions d'entraînement **automatiquement via un LLM**, plutôt que de reformuler des datasets NLP existants — beaucoup moins coûteux en annotation humaine.
 
 ---
 
@@ -680,8 +713,19 @@ Objectif d'**alignement** (Anthropic, *HHH*) : un modèle **Helpful, Honest, Har
 ```
 Étape 1 — SFT             : fine-tuning supervisé (déjà vu)
 Étape 2 — Reward Model    : entraîner un modèle à noter des réponses
-Étape 3 — RL (PPO)        : optimiser le LLM pour maximiser cette note
+Étape 3 — RL (PPO, proximal policy optimisation)        : optimiser le LLM pour maximiser cette note
 ```
+
+---
+
+## Étape 1 : Pre-training et SFT
+
+1. Pré-entraînez et finetunez votre modèle sur du texte brut, avec un objectif de CLM (*Causal Language Modeling*, prédiction du prochain token).
+
+<br>
+
+<center><img width="750px" src="../imgs/course3/rlhf-ppo1.jpg"/></center>
+
 
 ---
 
@@ -702,6 +746,16 @@ Humain   : A > B
 <br>
 
 Le **reward model** est entraîné sur des milliers de comparaisons de ce type, pour apprendre à **prédire un score de préférence** pour n'importe quelle réponse.
+
+---
+
+## Étape 2 : le modèle de récompense
+
+2. Entraînez un second modèle de langage à classer les réponses du premier modèle, en se basant sur des préférences humaines.
+
+<br>
+
+<center><img width="750px" src="../imgs/course3/rlhf-ppo2.jpg"/></center>
 
 ---
 
