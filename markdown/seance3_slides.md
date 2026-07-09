@@ -102,7 +102,7 @@ Les trois algorithmes principaux pour l'entraîner : **BPE**, **WordPiece**, **U
 
 <br>
 
-<center><img width="750px" src="../imgs/course2/token_graph.png"/></center>
+<center><img width="750px" src="../imgs/course3/token_graph.png"/></center>
 
 ---
 
@@ -765,6 +765,14 @@ Le LLM est ensuite ajusté pour **générer des réponses que le reward model no
 
 <br>
 
+<center><img width="750px" src="../imgs/course3/rlhf-ppo3.jpg"/></center>
+
+---
+
+## Étape 3 : optimiser avec RL (PPO)
+
+<br>
+
 ```
 LLM génère une réponse → Reward Model la note → PPO ajuste les poids du LLM
                           pour augmenter la note future
@@ -814,6 +822,15 @@ DPO : ajuster le LLM pour augmenter P(réponse préférée)
 
 <br>
 
+<center><img width="750px" src="../imgs/course3/Rlhf-DPO.jpg"/></center>
+
+
+---
+
+## RLHF vs DPO
+
+<br>
+
 | | **RLHF** | **DPO** |
 |---|---|---|
 | **Modèles à entraîner** | SFT + Reward Model + Policy RL | SFT + un seul modèle final |
@@ -853,102 +870,6 @@ DPO ne remplace pas la **collecte de préférences humaines** — seulement la f
 
 ---
 
-<!-- _class: section -->
-
-# 6. Évaluation
-
----
-
-## Pourquoi évaluer un LLM est difficile
-
-<br>
-
-- Un LLM est **généraliste** : pas de tâche unique à mesurer
-- Les benchmarks se **saturent** vite (un nouveau modèle bat le précédent record en quelques mois)
-- Risque de **contamination** : le benchmark peut avoir fuité dans les données de pré-entraînement (section 2)
-- Un bon score sur un benchmark ne garantit pas une bonne expérience utilisateur réelle
-
----
-
-## Benchmarks académiques classiques
-
-<br>
-
-| Benchmark | Mesure | Format |
-|---|---|---|
-| **MMLU** (Hendrycks et al., 2020) | Connaissances générales, 57 matières | QCM |
-| **HellaSwag** (Zellers et al., 2019) | Sens commun, complétion de phrase plausible | QCM |
-| **GSM8K** (Cobbe et al., 2021) | Raisonnement mathématique (niveau collège) | Problèmes ouverts |
-| **HumanEval** (Chen et al., 2021) | Génération de code fonctionnel | *pass@k* (le code s'exécute-t-il ?) |
-
-<br>
-
-Ces benchmarks apparaissent systématiquement dans les *model cards* (GPT-4, Claude, LLaMA, Gemini…) pour comparer les modèles.
-
----
-
-## Le problème de la contamination
-
-Les modèles sont entraînés sur **une grande partie du web** — qui contient parfois... les benchmarks eux-mêmes, ou leurs solutions.
-
-<br>
-
-```
-Benchmark public (2019) → indexé sur le web → présent dans Common Crawl (2023)
-                        → potentiellement vu pendant le pré-entraînement (2024)
-                        → score artificiellement élevé au moment de l'évaluation
-```
-
-<br>
-
-Conséquence : un score MMLU élevé peut refléter de la **mémorisation** plutôt que de la **généralisation**. D'où l'intérêt de benchmarks récents, privés, ou renouvelés régulièrement.
-
----
-
-## Évaluation humaine et LLM-as-judge
-
-Face aux limites des QCM, deux approches complémentaires :
-
-<br>
-
-**Chatbot Arena** (LMSYS, 2023) : des humains comparent en aveugle les réponses de deux modèles à un même prompt et votent pour la meilleure → classement de type **Elo** (comme aux échecs).
-
-<br>
-
-**LLM-as-judge** (MT-Bench, Zheng et al., 2023) : on utilise un LLM puissant (GPT-4, Claude) pour **noter automatiquement** les réponses d'autres modèles selon une grille de critères — bien moins cher qu'une évaluation humaine à grande échelle.
-
-<br>
-
-⚠️ Biais connus du LLM-as-judge : préférence pour les réponses **longues**, pour son **propre style**, sensibilité à l'ordre de présentation.
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Évaluation
-
-<br>
-
-**1.** Pourquoi un score élevé sur MMLU ne garantit-il pas qu'un modèle est réellement meilleur ?
-
-**2.** Quelle est la différence entre l'évaluation Chatbot Arena et un benchmark comme HumanEval ?
-
-**3.** Citez un biais connu du LLM-as-judge.
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Réponses
-
-**1.** Risque de **contamination** : le benchmark (ou ses réponses) peut avoir été vu pendant le pré-entraînement, gonflant artificiellement le score sans réelle généralisation.
-
-**2.** Chatbot Arena repose sur des **comparaisons humaines en aveugle** avec classement Elo ; HumanEval est un test **automatique et objectif** (le code s'exécute-t-il correctement ?).
-
-**3.** Préférence pour les réponses longues, préférence pour son propre style de génération, ou sensibilité à l'ordre de présentation des réponses comparées.
-
----
-
 ## Récapitulatif : comment construit-on un LLM ?
 
 <br>
@@ -976,12 +897,10 @@ Modèle déployé
 📄 **InstructGPT (RLHF)** : Ouyang et al. (2022); arxiv.org/abs/2203.02155
 📄 **Self-Instruct** : Wang et al. (2022); arxiv.org/abs/2212.10560
 📄 **DPO** : Rafailov et al. (2023); arxiv.org/abs/2305.18290
-📄 **MT-Bench / Chatbot Arena** : Zheng et al. (2023); arxiv.org/abs/2306.05685
 
 <br>
 
 🛠️ **Hugging Face TRL** (SFT, DPO, PPO) : huggingface.co/docs/trl
-📖 **LMSYS Chatbot Arena** : chat.lmsys.org
 
 ---
 
