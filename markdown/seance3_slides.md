@@ -117,7 +117,7 @@ Les trois algorithmes principaux pour l'entraîner : **BPE**, **WordPiece**, **U
 
 <br>
 
-<ins>Fertilité</ins> — pour une séquence de texte $S$ :
+<ins>Fertilité</ins> — pour un texte $S$ donné, avec un tokenizer donné :
 
 $$
 \text{fertilité}(S) = \frac{\#\text{ tokens}}{\#\text{ mots}}
@@ -125,8 +125,12 @@ $$
 
 <br>
 
-- Fertilité proche de **1** : peu de découpage, mais vocabulaire énorme et sensible aux mots rares (OOV)
-- Fertilité élevée : vocabulaire compact, mais séquences plus longues → plus cher, contexte rempli plus vite
+La fertilité elle dépend du tokenizer et **texte auquel on l'applique** — même tokenizer, fertilité différente selon la langue ou le domaine.
+
+<br>
+
+- À vocabulaire égal, plus une langue est morphologiquement riche et/ou mal représentée à l'entraînement, plus sa fertilité sera élevée
+- Fertilité élevée → séquences plus longues → coût d'inférence plus élevé, contexte rempli plus vite
 
 ---
 
@@ -306,7 +310,7 @@ SentencePiece         :  "New York"  →  ["▁New", "▁York"]
 
 <br>
 
-**Biais multilingue** : un token en anglais ≈ 1 mot ; en arabe ou en thaï ≈ 3–5 tokens pour la même information → coût plus élevé, fenêtre de contexte plus vite remplie.
+**Biais multilingue** : pour un même tokenizer, la **fertilité** (tokens/mot, cf. slide "Granularité") varie fortement selon la langue — un token en anglais ≈ 1 mot ; en arabe ou en thaï ≈ 3–5 tokens pour la même information → coût plus élevé, fenêtre de contexte plus vite remplie.
 
 <br>
 
@@ -787,8 +791,7 @@ Le LLM est ensuite ajusté pour **générer des réponses que le reward model no
 <br>
 
 ```
-LLM génère une réponse → Reward Model la note → PPO ajuste les poids du LLM
-                          pour augmenter la note future
+LLM génère une réponse → Reward Model la note → PPO ajuste les poids du LLM pour augmenter la note future
 ```
 
 <br>
