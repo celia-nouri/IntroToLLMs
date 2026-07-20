@@ -8,7 +8,7 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 5 : Frontières et raisonnement — l'état de l'art aujourd'hui
+## Séance 5 : Frontières et raisonnement 
 
 **4ème année RO DEV - ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
@@ -52,7 +52,7 @@ Trois briques à assembler : **agir en boucle** (ReAct), **planifier**, et **se 
 
 ## ReAct : raisonner et agir en boucle
 
-**Yao et al. (2022/2023, Princeton/Google)** — *"ReAct: Synergizing Reasoning and Acting in Language Models"*.
+**Yao et al. (2022/2023, Princeton/Google)**, *"ReAct: Synergizing Reasoning and Acting in Language Models"*.
 
 <br>
 
@@ -93,7 +93,7 @@ Aucune de ces deux informations n'est disponible en un seul appel — ReAct **d�
 
 ## Planifier avant d'agir : Tree of Thoughts
 
-**Yao et al. (2023, Princeton/Google)** — *"Tree of Thoughts: Deliberate Problem Solving with LLMs"*.
+**Yao et al. (2023, Princeton/Google)** dans *"Tree of Thoughts: Deliberate Problem Solving with LLMs"*.
 
 <br>
 
@@ -101,7 +101,7 @@ ReAct avance **linéairement** : une seule trajectoire, pas de retour en arrièr
 
 <br>
 
-**Idée** : à chaque étape, générer **plusieurs** raisonnements candidats, les **évaluer** (le modèle s'auto-juge), et explorer l'arbre résultant (BFS/DFS) — avec possibilité de **backtracker** sur une branche prometteuse.
+**Idée** : à chaque étape, générer **plusieurs** raisonnements candidats, les **évaluer** (le modèle s'auto-juge), et explorer l'arbre résultant (BFS/DFS) avec possibilité de **backtracker** sur une branche prometteuse.
 
 ```
 Étape 1 : 3 idées générées → 2 jugées prometteuses, 1 abandonnée
@@ -109,7 +109,7 @@ ReAct avance **linéairement** : une seule trajectoire, pas de retour en arrièr
           ... si une branche mène à une impasse → retour en arrière
 ```
 
-Exemple du papier : le jeu du **24** (combiner 4 nombres avec +,−,×,÷ pour obtenir 24) — un cas où l'exploration/backtracking bat largement le CoT classique.
+Exemple du papier : le jeu du **24** (combiner 4 nombres avec +,−,×,÷ pour obtenir 24); un cas où l'exploration/backtracking bat largement le CoT classique.
 
 ---
 
@@ -157,7 +157,7 @@ Deux approches complémentaires : gérer la mémoire comme un **système d'explo
 
 ## MemGPT : le LLM comme système d'exploitation
 
-**Packer et al. (2023, UC Berkeley)** — *"MemGPT: Towards LLMs as Operating Systems"*.
+**Packer et al. (2023, UC Berkeley)** dans *"MemGPT: Towards LLMs as Operating Systems"*.
 
 <br>
 
@@ -177,7 +177,7 @@ Le modèle peut explicitement appeler `archive_memory_search()` ou `core_memory_
 
 ## Generative Agents : un journal d'expériences
 
-**Park et al. (2023, Stanford/Google)** — *"Generative Agents: Interactive Simulacra of Human Behavior"*.
+**Park et al. (2023, Stanford/Google)** dans *"Generative Agents: Interactive Simulacra of Human Behavior"*.
 
 <br>
 
@@ -203,12 +203,12 @@ Plutôt qu'un seul LLM qui fait tout, on peut faire collaborer **plusieurs insta
 
 <br>
 
-- **Décomposition de tâches** : un agent "chef d'orchestre" délègue des sous-tâches à des agents spécialisés (ex. un agent qui lit du code, un autre qui écrit des tests) — c'est le principe des *subagents* dans des outils comme Claude Code
+- **Décomposition de tâches** : un agent "chef d'orchestre" délègue des sous-tâches à des agents spécialisés (ex. un agent qui lit du code, un autre qui écrit des tests), c'est le principe des *subagents* dans des outils comme Claude Code
 - **Vérification croisée** : plusieurs agents indépendants peuvent se corriger mutuellement
 
 <br>
 
-**Du et al. (2023, MIT/Google)** — *"Improving Factuality and Reasoning through Multiagent Debate"* : plusieurs instances du même LLM répondent **indépendamment** à une question, puis voient les réponses des autres et les critiquent, sur plusieurs tours → la réponse finale (majoritaire après débat) est **plus factuelle** qu'une réponse simple ou même qu'un simple vote majoritaire sans débat.
+**Du et al. (2023, MIT/Google)** dans *"Improving Factuality and Reasoning through Multiagent Debate"* : plusieurs instances du même LLM répondent **indépendamment** à une question, puis voient les réponses des autres et les critiquent, sur plusieurs tours → la réponse finale (majoritaire après débat) est **plus factuelle** qu'une réponse simple ou même qu'un simple vote majoritaire sans débat.
 
 ---
 
@@ -265,7 +265,7 @@ Ce n'est **pas** juste du prompting (Chain-of-Thought, séance 4) : ici, le mod�
 
 ## o1 (OpenAI, 2024)
 
-OpenAI entraîne le modèle, par **renforcement**, à produire une longue séquence de raisonnement interne (*"reasoning tokens"*) **avant** de donner sa réponse finale — un peu comme un Chain-of-Thought, mais appris et optimisé plutôt que simplement demandé par prompt.
+OpenAI entraîne le modèle, par **renforcement**, à produire une longue séquence de raisonnement interne (*"reasoning tokens"*) **avant** de donner sa réponse finale, un peu comme un Chain-of-Thought, mais appris et optimisé plutôt que simplement demandé par prompt.
 
 <br>
 
@@ -278,13 +278,13 @@ OpenAI entraîne le modèle, par **renforcement**, à produire une longue séque
 
 <br>
 
-Les deux sont **indépendants** : un modèle bien entraîné mais forcé à répondre immédiatement perd une partie de son potentiel ; à l'inverse, laisser "réfléchir" longtemps un modèle qui n'a jamais appris à structurer son raisonnement n'aide pas — il lui manque la compétence de base, pas le temps.
+Les deux sont **indépendants** : un modèle bien entraîné mais forcé à répondre immédiatement perd une partie de son potentiel ; à l'inverse, laisser "réfléchir" longtemps un modèle qui n'a jamais appris à structurer son raisonnement n'aide pas, il lui manque la compétence de base, pas le temps.
 
 ---
 
 ## o1 : un exemple concret
 
-Sur un problème de mathématiques difficile, un modèle "classique" (type GPT-4) répond souvent **directement**, en une seule tentative — et se trompe si la première approche est mauvaise.
+Sur un problème de mathématiques difficile, un modèle "classique" (type GPT-4) répond souvent **directement**, en une seule tentative et se trompe si la première approche est mauvaise.
 
 <br>
 
@@ -300,7 +300,7 @@ Réponse finale : x = 3
 
 <br>
 
-Ce raisonnement interne consomme **beaucoup plus de tokens** (donc plus de temps et de coût) qu'une réponse directe — d'où les gains sur les tâches de raisonnement (maths, code, sciences), au prix d'une latence et d'un coût par requête bien plus élevés.
+Ce raisonnement interne consomme **beaucoup plus de tokens** (donc plus de temps et de coût) qu'une réponse directe, d'où les gains sur les tâches de raisonnement (maths, code, sciences), au prix d'une latence et d'un coût par requête bien plus élevés.
 
 ---
 
@@ -320,11 +320,11 @@ Résultats marquants sur des benchmarks conçus pour résister à la mémorisati
 
 ## DeepSeek-R1 : contexte
 
-**DeepSeek-AI (2025)** — *"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"*.
+**DeepSeek-AI (2025)** dans *"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"*.
 
 <br>
 
-Premier modèle de raisonnement **open-weight** à rivaliser avec o1 sur les benchmarks de maths/code, entraîné pour une fraction du coût annoncé des modèles propriétaires équivalents — d'où l'onde de choc dans l'industrie en janvier 2025 (le "moment DeepSeek").
+Premier modèle de raisonnement **open-weight** à rivaliser avec o1 sur les benchmarks de maths/code, entraîné pour une fraction du coût annoncé des modèles propriétaires équivalents, d'où l'onde de choc dans l'industrie en janvier 2025 (le "moment DeepSeek").
 
 <br>
 
@@ -372,7 +372,7 @@ Récompense de format (format reward) :
 
 <br>
 
-**Pourquoi ce choix** : un modèle de récompense **appris** peut être "trompé" (*reward hacking*, séance 3) ; une règle de vérification automatique (le code s'exécute-t-il ? la réponse est-elle juste ?) ne peut pas être trompée de la même façon — mais cela ne fonctionne que pour des domaines **vérifiables** (maths, code), pas pour une réponse ouverte ou créative.
+**Pourquoi ce choix** : un modèle de récompense **appris** peut être "trompé" (*reward hacking*, séance 3) ; une règle de vérification automatique (le code s'exécute-t-il ? la réponse est-elle juste ?) ne peut pas être trompée de la même façon, mais cela ne fonctionne que pour des domaines **vérifiables** (maths, code), pas pour une réponse ouverte ou créative.
 
 ---
 
@@ -442,21 +442,21 @@ Plus simple et moins coûteux à entraîner que PPO (pas de second réseau à ma
 
 ## Pourquoi le calcul à l'inférence fonctionne-t-il ?
 
-**Snell et al. (2024, Google DeepMind/UC Berkeley)** — *"Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters"*.
+**Snell et al. (2024, Google DeepMind/UC Berkeley)** dans *"Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters"*.
 
 <br>
 
-Pour un budget de calcul **fixé**, allouer plus de calcul à l'**inférence** (échantillonner plus, vérifier, chercher) peut battre le fait d'entraîner un modèle plus **gros** — particulièrement sur des problèmes où **vérifier** une réponse est plus facile que la **générer**.
+Pour un budget de calcul **fixé**, allouer plus de calcul à l'**inférence** (échantillonner plus, vérifier, chercher) peut battre le fait d'entraîner un modèle plus **gros**, particulièrement sur des problèmes où **vérifier** une réponse est plus facile que la **générer**.
 
 <br>
 
-Nuance importante : ce n'est pas universel — sur des problèmes très difficiles, aucune quantité de calcul d'inférence ne compense un modèle de base trop faible.
+Nuance importante : ça ne marche pas pour tous les problèmes, sur des problèmes très difficiles, aucune quantité de calcul d'inférence ne compense un modèle de base trop faible.
 
 ---
 
 ## Vérifier plutôt que juste répondre
 
-**Lightman et al. (2023, OpenAI)** — *"Let's Verify Step by Step"*.
+**Lightman et al. (2023, OpenAI)** dans *"Let's Verify Step by Step"*.
 
 <br>
 
@@ -524,7 +524,7 @@ Beaucoup de tâches réelles nécessitent de **percevoir une image** : lire un g
 
 ## CLIP : aligner texte et image
 
-**Radford et al. (2021, OpenAI)** — *"Learning Transferable Visual Models From Natural Language Supervision"*.
+**Radford et al. (2021, OpenAI)** dans *"Learning Transferable Visual Models From Natural Language Supervision"*.
 
 <br>
 
@@ -625,7 +625,7 @@ Séance 5 : Agents (ReAct, planification, mémoire), modèles de
 
 <br>
 
-Un seul fil conducteur : comment un LLM est **construit** (séance 3), puis **utilisé et étendu** sans le ré-entraîner (séances 4-5).
+Un seul fil conducteur : les bases du traitement automatique du texte et de l'entraînement des modèles deep learning (séance 1), représentation du texte en vecteurs et architecture transformer (séance 2), comment un LLM est entraîné (séance 3), puis comment il est utilisé et étendu à l'appel et utilisateur d'outils externes (séance 4), enfin comment orchestrer la réalisation de tâches avec un ou plusieurs LLMs (séances 5).
 
 ---
 
@@ -701,7 +701,7 @@ Un seul fil conducteur : comment un LLM est **construit** (séance 3), puis **ut
 
 <br>
 
-*[À compléter : format, durée, supports autorisés, salle — voir annonce officielle]*
+QCM 40 questions - 1 heure - Vendredi 31 juillet
 
 <br>
 
