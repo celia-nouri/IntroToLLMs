@@ -69,13 +69,13 @@ Ces benchmarks apparaissent systématiquement dans les *model cards* (GPT-4, Cla
 
 <br>
 
-**HumanEval** ne veut pas dire "évalué par des humains" : le nom vient du fait que les **164 problèmes de programmation sont écrits à la main** par des humains (énoncé + tests unitaires). L'évaluation elle-même est **automatique** : le code généré est exécuté contre les tests, et *pass@k* mesure la proportion de problèmes résolus — aucun jugement humain n'intervient dans la note.
+**HumanEval** ne veut pas dire "évalué par des humains" : le nom vient du fait que les **164 problèmes de programmation sont écrits à la main** par des humains (énoncé + tests unitaires). L'évaluation elle-même est **automatique** : le code généré est exécuté contre les tests, et *pass@k* mesure la proportion de problèmes résolus, aucun jugement humain n'intervient dans la note.
 
 ---
 
 ## Le problème de la contamination
 
-Les modèles sont entraînés sur **une grande partie du web** — qui contient parfois... les benchmarks eux-mêmes, ou leurs solutions.
+Les modèles sont entraînés sur **une grande partie du web** qui contient parfois les benchmarks eux-mêmes, ou leurs solutions.
 
 <br>
 
@@ -90,15 +90,10 @@ MMLU publié (2020) → corrigés/fiches de révision postés sur GitHub, Quizle
 
 Conséquence : un score MMLU élevé peut refléter de la **mémorisation** plutôt que de la **généralisation**. D'où l'intérêt de benchmarks récents, privés, ou renouvelés régulièrement.
 
-<br>
-
-**Preuve que le problème est pris au sérieux** : depuis BIG-Bench, certains benchmarks insèrent une **"canary string"** — une chaîne de caractères unique et repérable — dans leurs données, spécifiquement pour que les équipes d'entraînement puissent **détecter et filtrer** ces benchmarks de leurs corpus de pré-entraînement avant de les utiliser.
-
-**Oren et al. (2023)** — *"Proving Test Set Contamination in Large Language Models"* — proposent une méthode statistique pour détecter, après coup, si un modèle a mémorisé l'ordre exact des exemples d'un benchmark.
 
 ---
 
-## Évaluation humaine et LLM-as-judge
+## Comparaison des LLMs 
 
 Face aux limites des QCM, deux approches complémentaires :
 
@@ -110,9 +105,12 @@ Face aux limites des QCM, deux approches complémentaires :
 
 > **Rappel — le classement Elo** : chaque modèle a un score. Avant un match, on calcule sa **probabilité attendue de gagner** à partir de l'écart de score avec l'adversaire. Après le match, son score est ajusté : gagner contre un modèle **mieux classé** rapporte plus de points que gagner contre un modèle plus faible (et l'inverse pour une défaite).
 
-<br>
+---
 
-**LLM-as-judge** (MT-Bench, Zheng et al., 2023) : on utilise un LLM puissant (GPT-4, Claude) pour **noter automatiquement** les réponses d'autres modèles selon une grille de critères — bien moins cher qu'une évaluation humaine à grande échelle.
+## LLM-as-judge
+
+
+**LLM-as-judge** (MT-Bench, Zheng et al., 2023) : on utilise un LLM puissant (GPT-4, Claude) pour **noter automatiquement** les réponses d'autres modèles selon une grille de critères explicités dans le prompt.
 
 <br>
 
@@ -140,7 +138,7 @@ Face aux limites des QCM, deux approches complémentaires :
 
 **1.** Risque de **contamination** : le benchmark (ou ses réponses) peut avoir été vu pendant le pré-entraînement, gonflant artificiellement le score sans réelle généralisation.
 
-**2.** Chatbot Arena repose sur des **comparaisons humaines en aveugle** avec classement Elo ; HumanEval est un test **automatique et objectif** (le code s'exécute-t-il correctement ?).
+**2.** Chatbot Arena repose sur des **comparaisons humaines en aveugle** avec classement Elo ; HumanEval est un test **automatique** (le code s'exécute-t-il correctement ?).
 
 **3.** Préférence pour les réponses longues, préférence pour son propre style de génération, ou sensibilité à l'ordre de présentation des réponses comparées.
 
@@ -152,7 +150,7 @@ Face aux limites des QCM, deux approches complémentaires :
 
 📄 **MT-Bench / Chatbot Arena** : Zheng et al. (2023); arxiv.org/abs/2306.05685
 
-📖 **LMSYS Chatbot Arena** : chat.lmsys.org
+📖 **LMSYS Chatbot Arena** : [arena.ai](https://arena.ai/leaderboard/agent)
 
 ---
 
@@ -199,13 +197,13 @@ Réponse attendue : Spam
 
 <br>
 
-**Radford et al. (2019, OpenAI)** — *"Language Models are Unsupervised Multitask Learners"* (papier **GPT-2**) — montrent les premiers qu'un LLM suffisamment grand peut réaliser des tâches (traduction, résumé, QA...) en zero-shot, sans avoir jamais été explicitement entraîné dessus, simplement en formulant la tâche comme un prompt en langage naturel.
+**Radford et al. (2019, OpenAI)** dans *"Language Models are Unsupervised Multitask Learners"* (papier **GPT-2**) montrent les premiers qu'un LLM suffisamment grand peut réaliser des tâches (traduction, résumé, QA...) en zero-shot, sans avoir jamais été explicitement entraîné dessus, simplement en formulant la tâche comme un prompt en langage naturel.
 
 ---
 
 ## Few-shot prompting
 
-On ajoute quelques **exemples** (*demonstrations*) dans le prompt avant la vraie requête — toujours **sans mise à jour des poids**.
+On ajoute quelques **exemples** (*demonstrations*) dans le prompt avant la vraie requête, toujours **sans mise à jour des poids**.
 
 <br>
 
@@ -225,7 +223,7 @@ Sentiment :"
 
 <br>
 
-**Brown et al. (2020, OpenAI)** — *"Language Models are Few-Shot Learners"* (papier **GPT-3**) — montrent qu'ajouter des exemples dans le prompt **améliore la performance**, et que ce gain du few-shot **s'accentue à mesure que le modèle grandit** (175B tire bien plus parti des exemples qu'un petit modèle).
+**Brown et al. (2020, OpenAI)** dans *"Language Models are Few-Shot Learners"* (papier **GPT-3**) montrent qu'ajouter des exemples dans le prompt **améliore la performance**, et que ce gain du few-shot **s'accentue à mesure que le modèle grandit** (175B tire bien plus parti des exemples qu'un petit modèle).
 
 ---
 
@@ -235,7 +233,7 @@ Une question encore débattue en recherche.
 
 <br>
 
-**Min et al. (2022)** — *"Rethinking the Role of Demonstrations"* — résultat surprenant : remplacer les **bons labels** des exemples par des labels **aléatoires** ne dégrade que peu la performance sur beaucoup de tâches.
+**Min et al. (2022)** dans *"Rethinking the Role of Demonstrations"* : résultat surprenant : remplacer les **bons labels** des exemples par des labels **aléatoires** ne dégrade que peu la performance sur beaucoup de tâches.
 
 <br>
 
@@ -249,7 +247,7 @@ Une question encore débattue en recherche.
 
 ## Chain-of-Thought (CoT) prompting
 
-**Wei et al. (2022, Google)** — *"Chain-of-Thought Prompting Elicits Reasoning in LLMs"*.
+**Wei et al. (2022, Google)**, *"Chain-of-Thought Prompting Elicits Reasoning in LLMs"*.
 
 <br>
 
@@ -264,7 +262,7 @@ Q: Un serveur traite 240 requêtes en 4 secondes. Combien de secondes
 A: 12                                              ← souvent faux
 
 Avec CoT :
-Q: [même question]
+Q: [même question]. Explique ton raisonnement étape par étape.
 A: Le débit est 240/4 = 60 requêtes/seconde.
    Pour 900 requêtes : 900/60 = 15 secondes.
    Réponse : 15                                    ← correct
@@ -274,11 +272,11 @@ A: Le débit est 240/4 = 60 requêtes/seconde.
 
 ## CoT : zero-shot et self-consistency
 
-**Kojima et al. (2022)** — *"LLMs are Zero-Shot Reasoners"* : il suffit d'ajouter **"Let's think step by step"** à la fin du prompt, **sans aucun exemple**, pour déclencher un raisonnement explicite et améliorer nettement les scores sur des benchmarks de raisonnement.
+**Kojima et al. (2022)** dans *"LLMs are Zero-Shot Reasoners"* : il suffit d'ajouter **"Let's think step by step"** à la fin du prompt, **sans aucun exemple**, pour déclencher un raisonnement explicite et améliorer nettement les scores sur des benchmarks de raisonnement.
 
 <br>
 
-**Wang et al. (2022)** — *self-consistency* : générer **plusieurs** chaînes de raisonnement (en échantillonnant, pas en greedy) pour la même question, puis garder la réponse finale **majoritaire**.
+**Wang et al. (2022)** introduit la *self-consistency* : générer **plusieurs** chaînes de raisonnement (en échantillonnant, pas en greedy) pour la même question, puis garder la réponse finale **majoritaire**.
 
 ```
 Chaîne 1 → réponse : 15
@@ -311,7 +309,7 @@ Chaîne 3 → réponse : 12
 
 **2.** Le modèle s'appuie surtout sur le **format** de la tâche et l'espace des réponses attendues, pas uniquement sur la relation input→output démontrée dans les exemples.
 
-**3.** Le modèle génère un raisonnement intermédiaire, token par token, **avant** la réponse finale — chaque étape de raisonnement conditionne la suivante, ce qui améliore les tâches nécessitant plusieurs étapes de calcul ou de logique.
+**3.** Le modèle génère un raisonnement intermédiaire, token par token, **avant** la réponse finale. Chaque étape de raisonnement conditionne la suivante, ce qui améliore les tâches nécessitant plusieurs étapes de calcul ou de logique.
 
 ---
 
@@ -353,7 +351,7 @@ Inférence    : forward seul, poids figés                    (à chaque requêt
 
 <br>
 
-**Ordre de grandeur du coût** : `coût ≈ (temps GPU par requête) × (prix horaire du GPU) / (nb de requêtes traitées en parallèle)`. D'où l'intérêt de tout ce qui suit : réduire le temps de calcul (contexte, quantisation) et maximiser le parallélisme (KV-cache, batching).
+**Ordre de grandeur du coût** : `coût ≈ (temps GPU en heures) × (prix horaire du GPU) / (nb de requêtes traitées en parallèle)`. D'où l'intérêt de tout ce qui suit : réduire le temps de calcul (contexte, quantisation) et maximiser le parallélisme (KV-cache, batching).
 
 ---
 
@@ -376,13 +374,18 @@ Doubler le contexte ≈ quadrupler le calcul d'attention.
 
 <br>
 
+---
+
+## Optimisation du calcul de l'attention
+
 **Dao et al. (2022)** — *FlashAttention* : recalcule l'attention exacte (pas d'approximation) en minimisant les lectures/écritures mémoire GPU → mêmes résultats, bien plus rapide, permet des contextes plus longs en pratique.
 
-⚠️ Le nombre d'opérations reste $O(n^2)$ — FlashAttention ne change **pas** la complexité théorique, il élimine un goulot d'étranglement mémoire (moins d'aller-retours entre la mémoire GPU lente et rapide), d'où le gain de vitesse réel.
+Le nombre d'opérations reste $O(n^2)$ en théorie. 
+FlashAttention élimine un goulot d'étranglement mémoire (moins d'aller-retours entre la mémoire GPU lente et rapide), d'où le gain de vitesse réel.
 
 <br>
 
-**Dao (2023)** — *FlashAttention-2* : même idée, mais avec un meilleur **partitionnement du travail entre threads/warps du GPU** → jusqu'à 2× plus rapide que la v1, en exploitant mieux le matériel, toujours sans changer la complexité $O(n^2)$.
+**Dao (2023)** — *FlashAttention-2* : même idée, mais avec un meilleur **partitionnement du travail entre threads/warps du GPU** → jusqu'à 2× plus rapide que la v1, en exploitant mieux le matériel, toujours sans changer la complexité théorique $O(n^2)$.
 
 ---
 
@@ -407,11 +410,11 @@ INT4 : 0,5 octet / paramètre  → LLaMA 65B ≈  35 Go de RAM/VRAM
 
 ## Le coût de l'inférence
 
-Les API de LLM facturent au **token** (entrée + sortie) — d'où l'importance de la tokenization vue en séance 3 (fertilité, vocabulaire).
+Les API de LLM facturent au **token** (entrée + sortie); d'où l'importance de la tokenization vue en séance 3 (fertilité, vocabulaire).
 
 <br>
 
-**Ordres de grandeur (indicatifs, évoluent vite)** — prix pour 1 million de tokens :
+**Ordres de grandeur (indicatifs, évoluent vite)**, prix pour 1 million de tokens :
 
 | Modèle | Entrée | Sortie |
 |---|---|---|
@@ -427,11 +430,11 @@ Les API de LLM facturent au **token** (entrée + sortie) — d'où l'importance 
 
 ## Optimiser l'inférence : KV-cache
 
-Générer un token nécessite l'attention entre ce token et **tous** les précédents. Sans optimisation, générer le token $t$ referait tout le calcul d'attention sur les $t-1$ tokens précédents — **redondant**, puisque ce calcul a déjà été fait pour générer les tokens précédents.
+Générer un token nécessite l'attention entre ce token et **tous** les précédents. Sans optimisation, générer le token $t$ referait tout le calcul d'attention sur les $t-1$ tokens précédents. Ceci est **redondant**, puisque ce calcul a déjà été fait pour générer les tokens précédents.
 
 <br>
 
-**KV-cache** : on garde en mémoire les vecteurs **clé (K)** et **valeur (V)** déjà calculés pour chaque token généré. À l'étape suivante, on calcule Q/K/V **seulement pour le nouveau token**, et on réutilise le K/V déjà en cache pour tout le reste.
+**KV-cache** : on garde en mémoire les vecteurs **clé (K)** et **valeur (V)** pour chaque token généré. À l'étape suivante, on calcule Q/K/V **seulement pour le nouveau token**, et on réutilise le K/V déjà en cache pour le reste.
 
 ```
 Sans cache : token t → recalcule K,V pour les t-1 tokens précédents + le nouveau
@@ -440,9 +443,7 @@ Avec cache : token t → réutilise K,V en cache, calcule seulement K,V du nouve
 
 <br>
 
-**Pope et al. (2022, Google)** — *"Efficiently Scaling Transformer Inference"* — analysent en détail le coût mémoire du KV-cache et son impact sur le débit de service à grande échelle.
-
-**Kwon et al. (2023)** — *PagedAttention / vLLM* : gère la mémoire du KV-cache comme un système d'exploitation gère la RAM (pagination), ce qui permet de servir **beaucoup plus de requêtes en parallèle** avec le même matériel.
+**Kwon et al. (2023)**, *PagedAttention / vLLM* : gère la mémoire du KV-cache comme un système d'exploitation gère la RAM (pagination), ce qui permet de servir **beaucoup plus de requêtes en parallèle** avec le même matériel.
 
 <br>
 
@@ -500,7 +501,7 @@ Ré-entraîner ou fine-tuner le modèle à chaque mise à jour de connaissance s
 
 ## Le pipeline RAG
 
-**Lewis et al. (2020, Facebook AI)** — *"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"*.
+**Lewis et al. (2020, Facebook AI)** dans *"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"*.
 
 <br>
 
@@ -525,7 +526,7 @@ Le LLM **n'est jamais ré-entraîné** : les documents retrouvés sont simplemen
 
 ## RAG : un exemple concret
 
-**Sans RAG** — question sur une politique interne à l'entreprise, absente des données d'entraînement :
+**Sans RAG**, une question sur une politique interne à l'entreprise, absente des données d'entraînement :
 
 ```
 Q : "Quelle est la limite de requêtes par minute de notre API interne
@@ -537,7 +538,7 @@ R : "En général, ce type d'API interne impose une limite de l'ordre
 
 <br>
 
-**Avec RAG** — le passage pertinent de la documentation interne est injecté dans le prompt :
+**Avec RAG**, le passage pertinent de la documentation interne est injecté dans le prompt :
 
 ```
 Contexte injecté : "PaymentGateway applique un quota de 240 requêtes/min
@@ -557,7 +558,7 @@ R : "240 requêtes par minute par client, avec un burst possible de
 | Composant | Rôle | Exemples |
 |---|---|---|
 | **Chunking** | Découper les documents en passages | taille fixe, par paragraphe, overlap |
-| **Embedding model** | Vectoriser chunks et requêtes | `sentence-transformers` (vu en lab 2) |
+| **Embedding model** | Vectoriser chunks et requêtes | `sentence-transformers` (ecodeur) |
 | **Base vectorielle** | Stocker et rechercher par similarité | FAISS (Johnson et al., 2019), Pinecone, Chroma |
 | **Génération** | Produire la réponse finale | n'importe quel LLM (via prompt) |
 
@@ -574,7 +575,7 @@ R : "240 requêtes par minute par client, avec un burst possible de
 - La retrieval peut **échouer** : passages non pertinents récupérés → réponse basée sur du bruit
 - La fenêtre de contexte limite **combien** de passages on peut injecter (section 3)
 - Le modèle peut encore **halluciner**, même avec un contexte pertinent fourni (il n'est pas obligé de s'y tenir)
-- Le RAG apporte des **connaissances**, pas de nouvelles **compétences** — il ne remplace pas un fine-tuning pour changer le style ou le comportement du modèle
+- Le RAG apporte des **connaissances**, pas de nouvelles **compétences** : il ne remplace pas un fine-tuning pour changer le style ou le comportement du modèle
 
 ---
 
@@ -645,13 +646,13 @@ Modèle → "Il devrait faire environ 22°C et nuageux à Paris demain."
 
 <br>
 
-Le modèle **décide quand** appeler un outil et **avec quels arguments** — il ne l'exécute jamais lui-même.
+Le modèle **décide quand** appeler un outil et **avec quels arguments**.
 
 ---
 
 ## Toolformer : apprendre à s'en servir seul
 
-**Schick et al. (2023, Meta AI)** — *"Toolformer: Language Models Can Teach Themselves to Use Tools"*.
+**Schick et al. (2023, Meta AI)** dans *"Toolformer: Language Models Can Teach Themselves to Use Tools"*.
 
 <br>
 
@@ -667,13 +668,16 @@ Le modèle **décide quand** appeler un outil et **avec quels arguments** — il
 3. On compare la perplexité du modèle sur les tokens qui suivent, avec vs.
    sans le résultat de l'appel inséré dans le texte
 4. On ne garde l'exemple que si le résultat réduit la perplexité d'une
-   marge minimale — sinon l'appel est jeté (jugé inutile)
+   marge minimale, sinon l'appel est jeté (jugé inutile)
 5. Le modèle est fine-tuné (SFT classique) sur les exemples filtrés
 ```
+---
+
+## Toolformer : apprendre à s'en servir seul
 
 <br>
 
-**Rappel — la perplexité** : c'est l'exponentielle de la perte d'entraînement (séance 3, prédiction du prochain token). Elle mesure à quel point le modèle est "surpris" par la suite réelle du texte : plus la perplexité est **basse**, plus le modèle attribuait une **probabilité élevée** aux tokens qui suivent réellement — donc le résultat de l'appel d'outil rend le texte suivant plus prévisible pour le modèle.
+**La perplexité** : c'est l'exponentielle de la perte d'entraînement. Elle mesure à quel point le modèle est "surpris" par la suite réelle du texte : plus la perplexité est **basse**, plus le modèle attribuait une **probabilité élevée** aux tokens qui suivent réellement, donc le résultat de l'appel d'outil rend le texte suivant plus prévisible pour le modèle.
 
 <br>
 
@@ -715,7 +719,7 @@ Aucune annotation humaine : le modèle apprend **seul** quand un outil est utile
 
 **1.** L'**application appelante** : le LLM ne fait que décider quand appeler un outil et avec quels arguments ; il ne l'exécute jamais lui-même.
 
-**2.** Il garde uniquement les appels qui **réduisent la perplexité** du modèle sur la suite du texte, par rapport à ne pas faire d'appel — un critère purement auto-supervisé.
+**2.** Il garde uniquement les appels qui **réduisent la perplexité** du modèle sur la suite du texte, par rapport à ne pas faire d'appel = un critère purement auto-supervisé.
 
 **3.** Les poids du modèle sont **figés** après l'entraînement (séance 3) : une information qui change en continu (météo, heure, cours de bourse...) ne peut pas être "sue" par des poids fixes — elle doit être récupérée **à la volée** via un outil.
 
@@ -743,7 +747,7 @@ Modèle capable d'agir sur le monde extérieur → agent (suite en séance 5)
 
 <br>
 
-📄 **GPT-2 (zero-shot)** : Radford et al. (2019); OpenAI blog + paper "Language Models are Unsupervised Multitask Learners"
+📄 **GPT-2 (zero-shot)** : Radford et al. (2019) : "Language Models are Unsupervised Multitask Learners"
 📄 **GPT-3 (few-shot)** : Brown et al. (2020); arxiv.org/abs/2005.14165
 📄 **Contamination des benchmarks** : Oren et al. (2023); arxiv.org/abs/2310.17623
 📄 **Chain-of-Thought** : Wei et al. (2022); arxiv.org/abs/2201.11903
@@ -754,7 +758,6 @@ Modèle capable d'agir sur le monde extérieur → agent (suite en séance 5)
 📄 **FlashAttention-2** : Dao (2023); arxiv.org/abs/2307.08691
 📄 **LLM.int8()** : Dettmers et al. (2022); arxiv.org/abs/2208.07339
 📄 **QLoRA** : Dettmers et al. (2023); arxiv.org/abs/2305.14314
-📄 **Efficiently Scaling Transformer Inference (KV-cache)** : Pope et al. (2022); arxiv.org/abs/2211.05102
 📄 **vLLM / PagedAttention** : Kwon et al. (2023); arxiv.org/abs/2309.06180
 📄 **RAG** : Lewis et al. (2020); arxiv.org/abs/2005.11401
 📄 **Toolformer** : Schick et al. (2023); arxiv.org/abs/2302.04761
