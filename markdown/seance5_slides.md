@@ -630,6 +630,18 @@ Un seul fil conducteur : les bases du traitement automatique du texte et de l'en
 ---
 
 <!-- _class: quiz -->
+## 🧩 Quiz de révision intéractif
+
+https://app.wooclap.com/MUZAQOT?from=instruction-slide
+
+<br>
+
+<center><img width="400px" src="../imgs/course5/wooclap.png"/></center>
+
+
+---
+
+<!-- _class: quiz -->
 
 ## 🧩 Quiz de révision — Séances 1 & 2 (et un peu 3)
 
