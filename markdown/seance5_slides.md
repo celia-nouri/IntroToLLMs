@@ -56,6 +56,13 @@ Trois briques à assembler : **agir en boucle** (ReAct), **planifier**, et **se 
 
 <br>
 
+<center><img width="500px" src="../imgs/course5/react.png"/></center>
+
+
+---
+
+## ReAct : raisonner et agir en boucle
+
 Combine le Chain-of-Thought (séance 4) avec des appels d'outils, **en boucle** :
 
 ```
@@ -70,24 +77,11 @@ Chaque observation **enrichit le contexte** pour l'étape de raisonnement suivan
 
 ---
 
-## ReAct : un exemple à plusieurs étapes
+## ReAct : Finetuning SLM pour la génération de prompt 
 
-Question multi-hop : *"Quel est l'âge du réalisateur du film qui a gagné l'Oscar du meilleur film en 2020 ?"*
+Les LLMs ayant déjà la capacité de raisonner et d'agir (séance 4), ReAct fonctionne via un LLM pré-entrainé, prompté avec des exemples (few-shot) démontrant la génération d'actions et de raisonnements en langage naturel pour répondre à des questions similaires au prompt. 
 
-```
-Thought : Je dois d'abord trouver le film gagnant de 2020.
-Action  : search("Oscar meilleur film 2020")
-Observation : "Parasite (Bong Joon-ho)"
-
-Thought : Je dois maintenant trouver l'âge de Bong Joon-ho.
-Action  : search("âge Bong Joon-ho")
-Observation : "55 ans (né en 1969)"
-
-Thought : J'ai les deux informations nécessaires.
-Final Answer : Le réalisateur, Bong Joon-ho, a 55 ans.
-```
-
-Aucune de ces deux informations n'est disponible en un seul appel — ReAct **décompose** la question au fil de l'exécution, sans plan fixé à l'avance.
+Dans un deuxième temps, un plus petit LLM est finetuné (en utilisant les trajectoires ayant produit de réponses correctes) pour générer les trajectoires (raisonnements + actions + observations) conditionnées sur les questions ou tâches d'entrée. Ces trajectoires générées sont ensuite utilisées comme prompt pour le LLM non-finetuné.
 
 ---
 
@@ -109,7 +103,7 @@ ReAct avance **linéairement** : une seule trajectoire, pas de retour en arrièr
           ... si une branche mène à une impasse → retour en arrière
 ```
 
-Exemple du papier : le jeu du **24** (combiner 4 nombres avec +,−,×,÷ pour obtenir 24); un cas où l'exploration/backtracking bat largement le CoT classique.
+Exemple du papier : le jeu du **24** (combiner 4 nombres avec +,−,×,÷ pour obtenir 24); un cas où l'exploration/backtracking bat largement le CoT classique (résoud  74% des tâches du jeu du 24 contre 4% avec le CoT classique).
 
 ---
 
@@ -123,7 +117,7 @@ Dans ReAct, chaque observation ré-injecte **tout le contexte** dans un nouvel a
 
 <br>
 
-**ReWOO sépare planification et exécution** :
+**ReWOO (Reasoning WithOut Observation) sépare planification et exécution** :
 
 ```
 1. Planner : génère TOUT le plan d'appels d'outils d'un coup (sans les exécuter)
@@ -131,14 +125,23 @@ Dans ReAct, chaque observation ré-injecte **tout le contexte** dans un nouvel a
 3. Solver  : rassemble les résultats et rédige la réponse finale
 ```
 
-<br>
+---
+
+## ReWOO
+
+<center><img width="600px" src="../imgs/course5/rewoo.png"/></center>
+
+
+--
+
+## Comparaison ReAct et ReWOO
 
 | | ReAct | ReWOO |
 |---|---|---|
 | Appels au LLM | 1 par cycle (Thought/Action/Observation) | 1 pour planifier + 1 pour conclure |
 | Adaptatif si un résultat surprend ? | Oui, immédiatement | Non, il faut re-planifier explicitement |
-| Coût en tokens | Plus élevé | Réduit |
-
+| Coût en tokens | Plus élevé | Réduit (#token ReAct / 5 sur HotpotQA) |
+| Performances | Meilleures que CoT et actions individuellement | Légèrement supérieures à ReAct (+4% sur HotpotQA) |
 ---
 
 ## Mémoire : au-delà de la fenêtre de contexte
@@ -159,6 +162,8 @@ Deux approches complémentaires : gérer la mémoire comme un **système d'explo
 
 **Packer et al. (2023, UC Berkeley)** dans *"MemGPT: Towards LLMs as Operating Systems"*.
 
+Gestion virtuelle du contexte = une technique qui s'inspire des systèmes de mémoire hiérarchique des systèmes d'exploitation (OS) traditionnels, lesquels donnent l'illusion de ressources mémoire importantes en déplaçant les données entre mémoire rapide et mémoire lente.
+
 <br>
 
 **Analogie directe avec la mémoire virtuelle** :
@@ -169,21 +174,35 @@ Deux approches complémentaires : gérer la mémoire comme un **système d'explo
 | Disque (lent, immense) | Mémoire externe (archive) |
 | Pagination (swap) | Le LLM **lui-même** décide quoi charger/décharger, via des appels de fonction |
 
+---
+
+## MemGPT : le LLM comme système d'exploitation
+
+<center><img width="500px" src="../imgs/course5/memgpt.png"/></center>
+
 <br>
 
 Le modèle peut explicitement appeler `archive_memory_search()` ou `core_memory_append()` pour gérer sa propre mémoire — la gestion de la mémoire devient une **compétence apprise**, pas juste un mécanisme externe.
+
+Performances accrues pour l'analyse de documents et des chats multi-sessions.
+
+---
+
+## Generative Agents 
+
+**Park et al. (2023, Stanford/Google)** dans *"Generative Agents: Interactive Simulacra of Human Behavior"*.
+25 agents LLM vivent dans un village simulé ("Smallville").
+
+
+<br>
+
+<center><img width="500px" src="../imgs/course5/genagents0.png"/></center>
 
 ---
 
 ## Generative Agents : un journal d'expériences
 
-**Park et al. (2023, Stanford/Google)** dans *"Generative Agents: Interactive Simulacra of Human Behavior"*.
-
-<br>
-
-25 agents LLM vivent dans un village simulé ("Smallville"), chacun avec un **flux de mémoire** (*memory stream*) : chaque observation/action est stockée en langage naturel, horodatée.
-
-<br>
+Chaque agent a un **flux de mémoire** (*memory stream*) : chaque observation/action est stockée en langage naturel, horodatée.
 
 Pour agir, un agent **récupère** les souvenirs pertinents selon 3 critères combinés :
 
@@ -194,6 +213,14 @@ score = récence + importance + pertinence (similarité avec la situation actuel
 <br>
 
 Périodiquement, l'agent **réfléchit** (*reflection*) : il relit ses souvenirs récents et en tire des observations de plus haut niveau (ex. "je remarque que je suis souvent interrompu le matin"), elles-mêmes stockées comme nouveaux souvenirs.
+
+---
+
+---
+
+## Generative Agents : un journal d'expériences
+
+<center><img width="600px" src="../imgs/course5/genagents1.png"/></center>
 
 ---
 
