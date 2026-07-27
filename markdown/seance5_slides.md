@@ -56,7 +56,7 @@ Trois briques à assembler : **agir en boucle** (ReAct), **planifier**, et **se 
 
 <br>
 
-<center><img width="500px" src="../imgs/course5/react.png"/></center>
+<center><img width="550px" src="../imgs/course5/react.png"/></center>
 
 
 ---
@@ -129,10 +129,10 @@ Dans ReAct, chaque observation ré-injecte **tout le contexte** dans un nouvel a
 
 ## ReWOO
 
-<center><img width="600px" src="../imgs/course5/rewoo.png"/></center>
+<center><img width="650px" src="../imgs/course5/rewoo.png"/></center>
 
 
---
+---
 
 ## Comparaison ReAct et ReWOO
 
@@ -196,7 +196,7 @@ Performances accrues pour l'analyse de documents et des chats multi-sessions.
 
 <br>
 
-<center><img width="500px" src="../imgs/course5/genagents0.png"/></center>
+<center><img width="550px" src="../imgs/course5/genagents0.png"/></center>
 
 ---
 
