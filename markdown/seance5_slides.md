@@ -216,8 +216,6 @@ Périodiquement, l'agent **réfléchit** (*reflection*) : il relit ses souvenirs
 
 ---
 
----
-
 ## Generative Agents : un journal d'expériences
 
 <center><img width="600px" src="../imgs/course5/genagents1.png"/></center>
@@ -333,7 +331,7 @@ Ce raisonnement interne consomme **beaucoup plus de tokens** (donc plus de temps
 
 ## o3 et la course au raisonnement
 
-OpenAI **o3** (annoncé fin 2024) pousse encore plus loin le même principe : allouer davantage de calcul au moment de l'inférence sur les problèmes qui le nécessitent.
+OpenAI **o3** (avril 2025) pousse encore plus loin le même principe : allouer davantage de calcul au moment de l'inférence sur les problèmes qui le nécessitent.
 
 <br>
 
@@ -405,7 +403,7 @@ Récompense de format (format reward) :
 
 ## Le raisonnement émerge — et ses limites
 
-Résultat surprenant : sans aucun exemple humain de raisonnement, R1-Zero développe spontanément un raisonnement **long**, avec de l'**auto-vérification**, et même un "**aha moment**" documenté où le modèle écrit littéralement *"Wait, let me re-check this"* en plein raisonnement.
+Résultat surprenant : sans aucun exemple humain de raisonnement, R1-Zero développe spontanément un raisonnement **long**, avec de l'**auto-vérification**, et même un "**aha moment**" documenté où le modèle écrit littéralement *"Wait, let me re-check this"* ou *"That’s an aha moment I can flag here"* en plein raisonnement.
 
 <br>
 
@@ -551,6 +549,15 @@ Beaucoup de tâches réelles nécessitent de **percevoir une image** : lire un g
 
 ## CLIP : aligner texte et image
 
+<br>
+
+<center><img width="500px" src="../imgs/course5/clip.png"/></center>
+
+
+---
+
+## CLIP : aligner texte et image
+
 **Radford et al. (2021, OpenAI)** dans *"Learning Transferable Visual Models From Natural Language Supervision"*.
 
 <br>
@@ -569,6 +576,7 @@ image(chat) ≠ texte("une photo d'un avion")    ← éloignés
 Résultat : un espace d'embeddings **partagé** entre texte et image, permettant de la classification **zero-shot** (comparer une image à plusieurs labels textuels candidats, sans entraînement spécifique).
 
 ---
+
 
 ## Brancher la vision sur un LLM : LLaVA
 
