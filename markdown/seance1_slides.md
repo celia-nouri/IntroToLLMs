@@ -38,11 +38,11 @@ Semestre 1, 2026–2027
 
 <br>
 
-|---|---|
-| **Volume** | 15h; 4 séances de 3h ou 4h30 |
-| **Format** | 2-3h cours + 30min-1h lab Python |
-| **Éval** | QCM 40 questions |
-| **Prérequis** | Python, bases ML, APIs REST |
+
+- **Volume** : 15h; 4 séances de 3h ou 4h30 
+- **Format** : 2-3h cours + 30min-1h lab Python 
+- **Éval** : QCM 40 questions 
+- **Prérequis** : Python, bases ML, APIs REST 
 
 <br>
 
@@ -59,7 +59,7 @@ Semestre 1, 2026–2027
 
 **TAL** = **T**raitement **A**utomatique des **L**angues (en anglais : *NLP, Natural Language Processing*)
 
-Les langues ou langage **naturel** (français, anglais, arabe…), à distinguer des langages **informatiques** (Python, SQL…) qui suivent des règles strictes et non ambiguës.
+Les langues ou langage naturel (français, anglais, arabe…), à distinguer des langages informatiques (Python, SQL…) qui suivent des règles strictes et non ambiguës.
 
 Deux mots, deux disciplines :
 1. **Le langage** → la **linguistique**
@@ -68,12 +68,12 @@ Deux mots, deux disciplines :
 ---
 ### (1) Le langage : la linguistique
 
-La **linguistique** = l'étude scientifique du langage humain. Quelles sont les règles qui le gouvernent ?
+La **linguistique** = l'étude du langage humain. Quelles sont les règles qui le gouvernent ?
 
 <br>
 
 - **Phonologie** : organisation et fonction des sons (les phonèmes) au sein d'une langue particulièreles
-- **Morphologie** : la forme des mots (*« irresponsables » = « ir- + respons- + -able- + -s »*)
+- **Morphologie** : la forme des mots (*« irresponsables » =>  ir- + respons- + -able- + -s *)
 - **Syntaxe** : l'ordre et la structure des phrases (*« Le chat mange la souris »* ≠ *« La souris mange le chat »*)
 - **Sémantique** : le sens des mots et des phrases 
 - **Pragmatique** : le sens en situation (*« Tu peux ouvrir la fenêtre ? »* est une demande, pas une question)
@@ -105,9 +105,6 @@ Le sens n’est pas uniquement contenu dans les mots eux-mêmes : il dépend de 
 #### Ambiguïté lexicale
 > *"Donne-moi la batterie."*
 L'instrument de musique ? La pile électrique ?
-#### Ambiguïté syntaxique
-> *"J'ai vu l'homme avec les jumelles."*
-Qui a les jumelles : moi ou l'homme ?
 #### Connaissance du monde
 > *"Marc s’est assis, a regardé le menu."*
 Sous-entendu : Marc est au restaurant.
@@ -129,7 +126,7 @@ Comment faire manipuler du langage par un ordinateur?
   *Représenter les mots par des vecteurs (Word2Vec)*
 - **Deep learning** : des réseaux de neurones profonds
   *RNN, puis Transformers, puis LLMs*
-- **Aujourd'hui** : les LLMs deviennent des **modèles de raisonnement**, utilisent des **outils** et agissent comme des **agents**
+- **Aujourd'hui** : intégration d'outils, mémoire, et systèmes agentiques
 
 ---
 ### Tâches classiques du TAL
@@ -138,8 +135,8 @@ Comment faire manipuler du langage par un ordinateur?
 
 | Tâche | Exemple |
 |---|---|
-| **Classification de texte** | Ce mail est-il un spam ? Cet avis est-il positif ? |
 | **Étiquetage de séquences** | Repérer les noms de personnes, de lieux (NER), la nature des mots (POS tagging) |
+| **Classification de texte** | Ce mail est-il un spam ? Cet avis est-il positif ? |
 | **Traduction automatique** | *« Bonjour »* → *« Hello »* |
 | **Résumé automatique** | Condenser un article en 3 phrases |
 | **Question-réponse** | *« Quelle est la capitale de l'Australie ? »* |
@@ -175,7 +172,7 @@ Comment faire manipuler du langage par un ordinateur?
 | **2014–2017** | Deep learning : réseaux récurrents | RNN, LSTM, seq2seq |
 | **2017** | Transformers | *Attention Is All You Need* |
 | **2018–2022** | Modèles pré-entraînés, LLMs | BERT, GPT-3, ChatGPT (fin 2022) |
-| **2024–…** | Raisonnement, outils, agents | o1, DeepSeek-R1, agents avec outils |
+| **2023–…** | Raisonnement, outils, agents | Toolformer, o1, DeepSeek-R1, agents |
 
 ---
 ### Historique des avancées en TAL
@@ -258,11 +255,10 @@ Comment faire manipuler du langage par un ordinateur?
 
 # 2. Le TAL avant le machine learning
 
-## Étudier le langage automatiquement
 
 ---
 
-### Une idée simple : compter
+## Étudier le langage automatiquement
 
 Avant le machine learning, on étudie le langage **avec des règles et des statistiques** :
 
@@ -374,19 +370,16 @@ Librairie recommandée : **`spaCy`** (Python)
 
 ## Résultats : des verbes genrés
 
-<center><img width="600px" src="../imgs/course1/res-both.png"/></center>
+<center><img width="700px" src="../imgs/course1/res-both.png"/></center>
 
 
 <br>
 
 - **Féminin** : *pleurer, aimer, rire, regretter, rêver* : expression des **émotions**
 - **Masculin** : *tirer, découvrir, marcher, sortir* : verbes d'**action** 
-- *aimer* apparaît pour **44 %** des personnages féminins contre **25 %** des masculins
 - Score d'agentivité (sujet vs objet de la phrase) : **0,70** pour les hommes, **0,64** pour les femmes
+- Un simple **comptage de lemmes** met en évidence des stéréotypes présents dans des centaines de romans.
 
-<br>
-
-> Un simple **comptage de lemmes** met en évidence des stéréotypes présents dans des centaines de romans.
 
 ---
 
@@ -484,13 +477,14 @@ $$\hat{y} = f(x\,;\,\theta)$$
 
 ---
 
-## La méthode en 3 étapes
+## La méthode en 4 étapes
 
 <br>
 
 1. **Source de données** : collecter des exemples
 2. **Définir la tâche d'apprentissage** par une **fonction paramétrique** $f(x\,;\,\theta)$ et une mesure de l'erreur (la fonction de perte)
-3. **Optimiser** la fonction sur des données d'**entraînement**, puis **tester la généralisation** sur des données qu'elle n'a jamais vues
+3. **Optimiser** la fonction sur des données d'**entraînement**
+4. **Tester la généralisation** sur des données qu'elle n'a jamais vues
 
 <br>
 
