@@ -8,9 +8,9 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 1 : Du NLP symbolique aux Transformers
+## Séance 1 : Introduction au traitement automatique des langues et apprentissage machine 
 
-**4ème année RO DEV - ESGI Paris**
+**ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
 Semestre 1, 2026–2027
 
@@ -26,12 +26,11 @@ Semestre 1, 2026–2027
 
 ## Au programme aujourd'hui
 
-1. Introduction
-2. Les bases du traitement automatique du langage
-3. Rappels : Machine Learning & rétropropagation
+1. Introduction : qu'est-ce que le TAL ?
+2. Le TAL avant le machine learning
+3. Les bases du machine learning
 
-
-> **Objectif** : construire une intuition solide sur le TAL (NLP) pour comprendre les LLMs dans les séances suivantes
+> **Objectif** : construire une intuition solide sur le TAL (NLP) et le machine learning pour comprendre les LLMs dans les séances suivantes
 
 ---
 
@@ -39,10 +38,9 @@ Semestre 1, 2026–2027
 
 <br>
 
-| | |
 |---|---|
 | **Volume** | 15h; 4 séances de 3h ou 4h30 |
-| **Format** | 2-3h cours + 1h lab Python |
+| **Format** | 2-3h cours + 30min-1h lab Python |
 | **Éval** | QCM 40 questions |
 | **Prérequis** | Python, bases ML, APIs REST |
 
@@ -59,69 +57,96 @@ Semestre 1, 2026–2027
 ---
 ### Qu'est-ce que le TAL ?
 
-Traitement automatique du langage (naturel, distinction avec le langage informatique ou code).
-> **Discussion** : Qu'est-ce que le TAL ?
+**TAL** = **T**raitement **A**utomatique des **L**angues (en anglais : *NLP, Natural Language Processing*)
+
+Les langues ou langage **naturel** (français, anglais, arabe…), à distinguer des langages **informatiques** (Python, SQL…) qui suivent des règles strictes et non ambiguës.
+
+Deux mots, deux disciplines :
+1. **Le langage** → la **linguistique**
+2. **Le traitement automatique** → l'**informatique** (statistiques, machine learning)
+
+---
+### (1) Le langage : la linguistique
+
+La **linguistique** = l'étude scientifique du langage humain. Quelles sont les règles qui le gouvernent ?
+
+<br>
+
+- **Phonologie** : organisation et fonction des sons (les phonèmes) au sein d'une langue particulièreles
+- **Morphologie** : la forme des mots (*« irresponsables » = « ir- + respons- + -able- + -s »*)
+- **Syntaxe** : l'ordre et la structure des phrases (*« Le chat mange la souris »* ≠ *« La souris mange le chat »*)
+- **Sémantique** : le sens des mots et des phrases 
+- **Pragmatique** : le sens en situation (*« Tu peux ouvrir la fenêtre ? »* est une demande, pas une question)
+
+<br>
+
+---
+### Le langage varie et évolue
+
+Le langage est aussi **social et culturel** : il varie selon les régions, les groupes sociaux, les époques et les registres.
+
+<br>
+
+- **Variations régionales** : *pain au chocolat* / *chocolatine* ; *« septante »* (Belgique, Suisse) / *« soixante-dix »* (France) ; *« char »* (Québec) = voiture
+- **Registres** : *« Je n'ai pas compris »* / *« J'ai pas capté »*
+- **Évolution** : nouveaux mots (*« liker », « ghoster »*), sens qui changent, langage SMS et réseaux sociaux
+- **Culture** : expressions (*« Avoir le cafard »*, *« Poser un lapin »*)
+
+<br>
 
 ---
 
 ### Le langage est ambigu par nature
 
-Le sens n’est pas uniquement contenu dans les mots eux-mêmes : il dépend de la syntaxe, du contexte discursif, de la situation d’énonciation, des connaissances du monde et des intentions du locuteur...
+Le sens n’est pas uniquement contenu dans les mots eux-mêmes : il dépend de la syntaxe, du contexte discursif, de la situation d’énonciation, des connaissances du monde et des intentions du locuteur, etc...
 
 <br>
 
 #### Ambiguïté lexicale
 > *"Donne-moi la batterie."*
-L'instrument de musique ? La pile électique ?
+L'instrument de musique ? La pile électrique ?
 #### Ambiguïté syntaxique
 > *"J'ai vu l'homme avec les jumelles."*
-Qui a les jumelles ? Moi ou l'homme.
-<br>
----
-
+Qui a les jumelles : moi ou l'homme ?
 #### Connaissance du monde
-> * "Marc s’est assis, a regardé le menu."
+> *"Marc s’est assis, a regardé le menu."*
 Sous-entendu : Marc est au restaurant.
-#### Connaissances culturelles
-"C'est pas mal."*
-En français familier, c'est **bien** !
 #### Ironie / Sarcasme
-> Après 2h de retard : "Super, t’es vraiment ponctuel." 
-Sens réel : critique / sens littéral: compliment.
-#### Dépendance au contexte pragmatique
-> "Tu peux ouvrir la fenêtre ?"
-Sens réel : demande d'ouvrir. Sens littéral : capacité d'ouvrir.
-<br>
+> Après 2h de retard : *"Super, t’es vraiment ponctuel."*
+Sens réel : critique / sens littéral : compliment.
 
 ---
-### Le langage est ambigu par nature
-<br/>
+### (2) Le traitement automatique
 
-<center>
-<img height="500px" src="../imgs/course1/intro-cartoon.png"/>
-</center>
+Traitement automatique par ordinateur, exécute des suites d'instructions pour effectuer des calculs arithmétiques et des opérations logiques sur des chiffres binaires (0/1).
+Comment faire manipuler du langage par un ordinateur? 
+
+<br>
+
+- **Avant le machine learning** : on **compte** et on applique des **règles écrites à la main**
+  *Statistiques sur les mots, stop words, stemming, lemmatisation, expressions régulières, POS tagging, analyse en dépendances…*
+- **Machine learning** : la machine **apprend** les régularités à partir d'exemples
+  *Représenter les mots par des vecteurs (Word2Vec)*
+- **Deep learning** : des réseaux de neurones profonds
+  *RNN, puis Transformers, puis LLMs*
+- **Aujourd'hui** : les LLMs deviennent des **modèles de raisonnement**, utilisent des **outils** et agissent comme des **agents**
 
 ---
-
-## Ce que les LLMs ont appris à modéliser
-
-Pour désambiguïser, il faut comprendre le **contexte**.
+### Tâches classiques du TAL
 
 <br>
 
-*"La __batterie__ est déchargée"* → batterie électrique 
-*"La __batterie__ est facile à apprendre"* → l'instrument de musique 
-
-<br>
-
-Les LLMs modernes produisent des **représentations différentes** pour le même mot selon son contexte. C'est la grande avancée par rapport aux représentations décontextualisées (pré-transformers). Mais cela ne suffit pas toujours à capturer les subtilités sociales, culturelles, conversationnelles du langage.
-
-<br>
-
-> **Discussion** : Donnez des exemples de mot/phrase français·e dont le sens change selon le contexte.
+| Tâche | Exemple |
+|---|---|
+| **Classification de texte** | Ce mail est-il un spam ? Cet avis est-il positif ? |
+| **Étiquetage de séquences** | Repérer les noms de personnes, de lieux (NER), la nature des mots (POS tagging) |
+| **Traduction automatique** | *« Bonjour »* → *« Hello »* |
+| **Résumé automatique** | Condenser un article en 3 phrases |
+| **Question-réponse** | *« Quelle est la capitale de l'Australie ? »* |
+| **Génération de texte** | Rédiger un mail, écrire du code |
 
 ---
-### Où trouver des données textuelles ?
+### Les données textuelles
 
 > **Discussion** : Quelles sont les sources de données utilisées par le TAL.
 
@@ -138,6 +163,19 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 <center>
 <img height="450px" src="../imgs/course1/datasources_nlp.png"/>
 </center>
+
+---
+### Historique des avancées en TAL
+
+| Période | Approche | Repères |
+|---|---|---|
+| **1950–1980s** | Règles écrites à la main (symbolique) | ELIZA (1966), grammaires formelles |
+| **1990–2000s** | Statistiques : on compte les mots | *n*-grammes, Zipf, *bag of words*, TF-IDF |
+| **2013** | Machine learning : embeddings | Word2Vec |
+| **2014–2017** | Deep learning : réseaux récurrents | RNN, LSTM, seq2seq |
+| **2017** | Transformers | *Attention Is All You Need* |
+| **2018–2022** | Modèles pré-entraînés, LLMs | BERT, GPT-3, ChatGPT (fin 2022) |
+| **2024–…** | Raisonnement, outils, agents | o1, DeepSeek-R1, agents avec outils |
 
 ---
 ### Historique des avancées en TAL
@@ -177,48 +215,12 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 <img width="900px" src="../imgs/course1/bing.png"/>
 </center>
 
-
----
-
-### Le TAL en 2025-2026
-
-<center>
-<img width="850px" src="../imgs/course1/knowgraph_hp.png"/>
-</center>
-
 ---
 
 ### Le TAL en 2025-2026
 
 <center>
 <img width="1000px" src="../imgs/course1/game_agents.png"/>
-</center>
-
----
-<!--_class: lead -->
-# Est-ce que les tâches de TAL sont résolues ? <h3>(NON.)</h3>
-
----
-
-### Le TAL en 2025-2026
-
-<center>
-<img width="900px" src="../imgs/course1/prompt_easy.png"/>
-</center>
-
----
-### Le TAL en 2025-2026
-<br>
-
-<center>
-<img width="900px" src="../imgs/course1/prompt_linear.png"/>
-</center>
-
----
-### Le TAL en 2025-2026
-
-<center>
-<img width="700px" src="../imgs/course1/prompt_bias.png"/>
 </center>
 
 ---
@@ -245,63 +247,112 @@ Les LLMs modernes produisent des **représentations différentes** pour le même
 ---
 
 ### Organisation des séances
-* **Séance 1 (Aujourd'hui)**: Fondations : Introduction, Recap ML, embeddings, Transformers
-* **Séance 2 (12 juin)**: Entrainement : Tokenization, Pré-entraînement, Fine-tuning, Alignement
-* **Séance 3 (10 juillet)**: Utilisation et LLM-augmentés : Prompting, RAG 
-* **Séance 4 (24 juillet)**: Agents : Toolformer, Architectures agentiques, 
-* **Séance 5 (28 juillet)**: Frontière : Modèles de raisonnement, Multimodalité,   
+* **Séance 1 (Aujourd'hui)**: Fondations : Introduction TAL et ML 
+* **Séance 2 (29 octobre)**: Embeddings, Transformers, Tokenization, Pré-entraînement
+* **Séance 3 (30 octobre)**: Entraînement: Pré-entraînement + Post-entrainement, Utilisation et LLM-augmentés : Prompting, RAG 
+* **Séance 5 (27 novembre)**: Agents : Toolformer, Architectures agentiques + Modèles de raisonnement (bonus: Multimodalité)   
 
-* **Examen (31 juillet)**: QCM final 40 questions
+* **Examen**: QCM final 40 questions
 ---
 <!-- _class: section -->
 
-# 2. Les bases du traitement automatique du langage
+# 2. Le TAL avant le machine learning
+
+## Étudier le langage automatiquement
 
 ---
 
-## Qu'est-ce qu'un token ?
+### Une idée simple : compter
 
-Un **token** = l'unité de base que le modèle traite. Ce n'est **pas forcément un mot**.
+Avant le machine learning, on étudie le langage **avec des règles et des statistiques** :
 
-<br>
-
-
-| Découpage | Résultat |
-|---|---|
-| Par mot | `[J', adore, ce, cours, !]` |
-| Par sous-mot (BPE) | `[J', ador, ##e, ce, cours, !]` |
-| Par caractère | `[J, ', a, d, o, r, e, ...]` |
-
-<br>
-
-Les LLMs modernes utilisent le **sous-mot** (WordPiece, SentencePiece, BPE). Vocabulaires de 30k–100k tokens.
+1. **Trouver des patterns** dans les textes
+2. **Les associer à des phénomènes** qu'on veut étudier ou détecter
 
 ---
 
-## Pourquoi des sous-mots ?
+## La loi de Zipf
+
+Une régularité statistique observée dans **toutes** les langues : la fréquence d'un mot est **inversement proportionnelle à son rang**.
 
 <br>
 
-**Par caractère** : séquences très longues, pas de sémantique
-**Par mot entier** : mots rares, néologismes, formes fléchies (`courons`, `courais`…)
-**Par sous-mot** : bon compromis : vocabulaire fini, mots inconnus décomposables, formes fléchies rassemblées
+$$f(r) \propto \frac{1}{r}$$
 
 <br>
 
+- Le mot le plus fréquent apparaît ~2× plus que le 2ème, ~3× plus que le 3ème…
+- ~100 mots couvrent ~50% de tout texte
+- La grande majorité du vocabulaire est **très rare**
+
+<br>
+
+**Conséquence** : les mots les plus fréquents (*« le », « de », « et »*) sont partout, donc ne nous apprennent rien sur le sujet d'un texte.
+
+---
+## La loi de Zipf
+
+
+<center><img width="700px" src="../imgs/course1/brownzipf.png"/></center>
+
+---
+
+
+## Un exemple d'étude de TAL
+
+**Questions** : quels verbes/adjectifs sont les plus associés aux personnages **féminins** ou **masculins** dans un roman ?
+
+> Article : **Gender Bias in French Literature** (Vianne, Dupont, Barré, CHR 2023)
+
+---
+
+## Étude : biais de genre dans la littérature française
+
+<br>
+
+- **Corpus** : 2 942 romans français de 1811 à 2020
+- **Objectif** : les personnages sont-ils décrits différemment selon leur genre ?
+- **Méthode** :
+  1. Repérer les personnages et leurs mentions (*il, elle, Jeanne…*)
+  2. Analyser chaque phrase avec spaCy (**lemmatisation**, **POS tagging**, **analyse en dépendances**)
+  3. Extraire les **verbes** et **adjectifs** liés à chaque personnage
+  4. **Compter** les lemmes par personnage (*bag of words*)
+
+
+---
+
+## Part-of-speech (POS) tagging 
+
+Détecter automatiquement la fonction grammaticale de chaque mot dans un texte. 
+
+<center><img width="700px" src="../imgs/course1/POS.png"/></center>
+
+
+---
+
+## Stop words
+
+**Stop words** = mots si fréquents qu'ils ne portent pas de sens discriminant.
+
+*le, la, les, un, une, des, de, du, et, ou, est, à, dans, pour, que, qui, ce, il, elle, je, tu, ne, pas*
+
+On cherche a les retirer pour de nombreuses tâches de TAL.
+**Exemple** : on cherche les mots les plus associés au genre masculin ou féminin, en comptant ses mots.
+
+```python
+# Exemple avec spaCy
+[token for token in doc if not token.is_stop]
 ```
-"ChatGPT" → ["Chat", "G", "PT"]    # mot inconnu → décomposé
-"courons"  → ["cour", "ons"]       # morphologie préservée
-```
-
-<br>
-
-On verra les algorithmes de tokenization dont BPE en détail en **séance 2**.
 
 ---
 
 ## Stemming vs Lemmatisation
 
-Deux techniques pour **normaliser** les formes d'un mot.
+Un même mot existe sous plusieurs formes : **pluriel, masculin/féminin, conjugaison, suffixes, préfixes**.
+
+*manger, mangeons, mangeait, mangé* · *heureux, heureuse, heureuses* · *lait, laitier, laiterie*
+
+Une même **racine** = un même **sens**. On veut les regrouper pour compter correctement.
 
 <br>
 
@@ -310,66 +361,55 @@ Deux techniques pour **normaliser** les formes d'un mot.
 "courais", "courons", "courir"  →  "cour"   ← pas un vrai mot !
 ```
 
-**Lemmatisation** : forme canonique, tient compte du contexte grammatical, mais coûteux
+**Lemmatisation** : forme canonique, tient compte du contexte grammatical, mais plus coûteux
 ```
 "courais", "courons", "courir"  →  "courir"
 "meilleures", "meilleur"        →  "bon"   ← le lemme de "meilleur" !
 ```
 
-<br>
-
 Librairie recommandée : **`spaCy`** (Python)
+
 
 ---
 
-## Stop words & Regex
+## Résultats : des verbes genrés
 
-**Stop words** : mots si fréquents qu'ils ne portent pas de sens discriminant.
+<center><img width="600px" src="../imgs/course1/res-both.png"/></center>
 
-```python
-# Exemple avec spaCy
-[token for token in doc if not token.is_stop]
-# "le", "de", "et", "un"... → retirés
-```
-
-⚠️ Attention au contexte : *"Être ou **ne** **pas** être"* : les stop words comptent ici !
 
 <br>
 
-**Expressions régulières** : patterns pour extraire des structures dans le texte.
+- **Féminin** : *pleurer, aimer, rire, regretter, rêver* : expression des **émotions**
+- **Masculin** : *tirer, découvrir, marcher, sortir* : verbes d'**action** 
+- *aimer* apparaît pour **44 %** des personnages féminins contre **25 %** des masculins
+- Score d'agentivité (sujet vs objet de la phrase) : **0,70** pour les hommes, **0,64** pour les femmes
+
+<br>
+
+> Un simple **comptage de lemmes** met en évidence des stéréotypes présents dans des centaines de romans.
+
+---
+
+## Expressions régulières (regex)
+
+Une **regex** décrit un **pattern** de texte, pour retrouver automatiquement des structures.
+
+**Exemple** : extraire les numéros de téléphone, les adresses et les emails d'un texte.
 
 ```python
 import re
-re.findall(r'\d{2}-\d{2}-\d{2}-\d{2}-\d{2}', texte)  # → numéros de téléphone
-re.findall(r'[\w.-]+@[\w.-]+\.\w+', texte)             # → emails
+
+texte = "Marie, 12 bis rue de la Paix, 75002 Paris. Tél : 06.12.34.56.78"
+
+re.findall(r'(?:\+33\s?|0)[1-9](?:[ .-]?\d{2}){4}', texte)
+# → ['06.12.34.56.78']                       (numéros de téléphone)
+
+re.findall(r"\d{1,3}(?: bis| ter)? (?:rue|avenue|boulevard|place) [\w' -]+, \d{5} [A-ZÉ][\w-]+", texte)
+# → ['12 bis rue de la Paix, 75002 Paris']   (adresses)
+
+re.findall(r'[\w.-]+@[\w.-]+\.\w+', texte)
+# → emails
 ```
-
----
-
-## La loi de Zipf
-
-Dans **toute** langue humaine : le mot le plus fréquent apparaît ~2× plus que le 2e, ~3× plus que le 3e…
-
-<br>
-
-```
-Rang 1  : "le"   → ~7% de tous les tokens
-Rang 2  : "de"   → ~3.5%
-Rang 10 : "un"   → ~0.7%
-Rang 100: ...    → très rare
-```
-
-<br>
-
-**Conséquence pratique** :
-- ~100 mots couvrent ~50% de tout texte
-- La grande majorité du vocabulaire est **très rare**
-- Les modèles doivent gérer des données très déséquilibrées
-
----
-## La loi de Zipf
-
-<center><img width="700px" src="../imgs/course1/brownzipf.png"/></center>
 
 ---
 
@@ -418,15 +458,17 @@ le lemme serait `aller`.
 
 <!-- _class: section -->
 
-# 3. Rappel Machine Learning
+# 3. Introduction au Machine Learning
 
 ---
 
 ## C'est quoi, l'apprentissage machine ?
 
-Un modèle ML = une **fonction paramétrique**.
+Au lieu d'écrire les règles à la main, on **laisse la machine les découvrir à partir de données exemples**.
 
 <br>
+
+Un modèle de ML = une **fonction paramétrique** qui **modélise les données** :
 
 $$\hat{y} = f(x\,;\,\theta)$$
 
@@ -434,11 +476,103 @@ $$\hat{y} = f(x\,;\,\theta)$$
 
 - $x$ = entrée (texte, image…)
 - $\hat{y}$ = prédiction du modèle
-- $\theta$ = **paramètres** (poids); des millions voire milliards de variables à calibrer
+- $\theta$ = **paramètres** (poids) : variables que l'on ajuste ; de quelques dizaines à des milliards
 
 <br>
 
-**Apprendre** = trouver les $\theta$ qui minimisent l'écart entre $\hat{y}$ et la vraie réponse $y$.
+**Apprendre** = optimiser $\theta$ pour que la fonction **reproduise les données**, c'est-à-dire que $\hat{y}$ soit proche de la vraie réponse $y$.
+
+---
+
+## La méthode en 3 étapes
+
+<br>
+
+1. **Source de données** : collecter des exemples
+2. **Définir la tâche d'apprentissage** par une **fonction paramétrique** $f(x\,;\,\theta)$ et une mesure de l'erreur (la fonction de perte)
+3. **Optimiser** la fonction sur des données d'**entraînement**, puis **tester la généralisation** sur des données qu'elle n'a jamais vues
+
+<br>
+
+> Ce qui compte n'est pas d'obtenir un bon score sur les exemples déjà vus (le modèle pourrait simplement mémoriser les données d'entrainement), mais sur **de nouveaux exemples**.
+
+---
+
+## Séparer les données : train / validation / test
+
+On découpe les données en **trois ensembles** :
+
+<br>
+
+| Ensemble | Rôle | Analogie |
+|---|---|---|
+| **Entraînement** (*train*) | Optimiser les paramètres $\theta$ | Les exercices qu'on travaille |
+| **Validation** | Choisir les réglages (hyperparamètres), détecter le surapprentissage | Les examens blancs |
+| **Test** | Mesure finale, utilisée **une seule fois** | L'examen final |
+
+<br>
+
+Exemple de découpage : **80 %** / **10 %** / **10 %**.
+Règle d'or: ne jamais entrainer le modèle sur les données de test, sinon le score est truqué.
+
+---
+
+## Supervisé vs non supervisé
+
+<br>
+
+| | **Supervisé** | **Non supervisé** |
+|---|---|---|
+| **Données** | Entrées $x$ **avec** la réponse $y$ (labels) | Entrées $x$ **sans** label |
+| **Objectif** | Prédire $y$ à partir de $x$ | Découvrir une structure dans les données |
+| **Exemples** | Détection de spam, traduction, analyse de sentiment | Clustering, Word2Vec |
+
+<br>
+
+Les labels demandent souvent du **travail humain** (annotation) qui est très coûteux. Les algorithmes non supervisé fonctionnent sans label, mais ne sont pas adaptés pour toutes les tâches.
+
+---
+
+## Exemple supervisé : détecter les spams
+
+**Tâche** : dire si un email est un spam.
+
+<br>
+
+1. **Données** : 5 000 emails
+2. **Labels** : chaque email est annoté **spam** ($y=1$) ou **non-spam** ($y=0$)
+3. **Fonction** : $f(x=\text{email}) = y=\text{label}$
+
+<br>
+
+| Email | Label |
+|---|---|
+| *« Gagnez 1000 € maintenant, cliquez ici ! »* | spam |
+| *« Réunion de projet demain à 10h »* | non-spam |
+
+---
+
+## Spam : représenter l'email par des nombres
+
+Un ordinateur ne calcule que sur des **nombres**. On compte les mots (comme dans la partie 2) :
+
+<br>
+
+$x$ = vecteur des **occurrences de chaque mot** du vocabulaire
+
+```
+vocabulaire :   gagnez  cliquez  réunion  demain  ...
+email 1     :     1        1        0       0     ...   (spam)
+email 2     :     0        0        1       1     ...   (non-spam)
+```
+
+<br>
+
+$$\hat{y} = \sigma(w \cdot x + b) \in [0,1]$$
+
+- $w$ : un **poids par mot** (*« gagnez » → poids élevé* : signal de spam)
+- $\sigma$ : transforme le score en **probabilité** d'être un spam
+- **Paramètres** $\theta = (w, b)$ : avec un vocabulaire de 10 000 mots, **10 001 paramètres** à optimiser (contre des milliards pour un LLM)
 
 ---
 
@@ -456,6 +590,12 @@ C'est la **cross-entropy**. Plus $\mathcal{L}$ est faible, mieux le modèle pré
 
 <br>
 
+Un email est un spam ($y=1$) :
+- le modèle dit $\hat{y}=0{,}9$ → $\mathcal{L} \approx 0{,}11$ (petite erreur)
+- le modèle dit $\hat{y}=0{,}1$ → $\mathcal{L} \approx 2{,}30$ (grosse erreur)
+
+<br>
+
 **Objectif** : trouver $\theta^*$ tel que $\mathcal{L}$ soit minimale sur les données d'entraînement.
 
 **Discussion** : comment trouver le minimum (s'il existe) de la fonction de perte ? 
@@ -464,8 +604,9 @@ C'est la **cross-entropy**. Plus $\mathcal{L}$ est faible, mieux le modèle pré
 
 ## Descente de gradient
 
-L'objectif est de trouver le minimum de la fonction de perte, mais dans le cas des réseaux de neurones, cette fonction est la fonction est très complexe, non linéaire et multidimensionnelle.
-Il impossible de résoudre ce problème directement avec la formule exacte "dérivée = 0". 
+**Entraîner** le filtre à spam = trouver les $\theta$ qui minimisent la perte sur les **80 % de données d'entraînement**.
+
+Pour les réseaux de neurones, la fonction de perte est très complexe, non linéaire et multidimensionnelle : impossible de résoudre directement "dérivée = 0".
 
 Idée : se déplacer dans la direction qui **réduit** la fonction de perte.
 
@@ -507,9 +648,11 @@ PyTorch / TensorFlow font ça automatiquement (**autograd**).
 
 Le modèle **mémorise** les données d'entraînement au lieu d'en apprendre les patterns.
 
+On le détecte en comparant les scores sur l'**entraînement** et sur la **validation / le test**.
+
 <br>
 
-| | Train accuracy | Test accuracy |
+| | Accuracy train | Accuracy test |
 |---|---|---|
 | Bon modèle | 92% | 89% |
 | Overfitting | 99% | 62% |
@@ -521,6 +664,36 @@ Le modèle **mémorise** les données d'entraînement au lieu d'en apprendre les
 - **Weight decay** : pénaliser les poids trop grands ($L_2$ régularisation)
 - **Early stopping** : arrêter quand la validation stagne
 - **Plus de données** : (et des données plus diverses et représentatives), le remède le plus efficace
+
+---
+
+## Spam : évaluer sur les données de test
+
+Après l'entraînement (descente de gradient sur les 80 % d'entraînement), on **évalue sur les 10 % de test**, jamais vus par le modèle :
+
+<br>
+
+- **Accuracy** : part des emails correctement classés
+- **Précision / rappel** : combien de vrais spams détectés, combien de fausses alertes
+
+<br>
+
+> Un bon filtre à spam n'est pas celui qui connaît ses 4 000 emails d'entraînement, mais celui qui classe correctement **les emails de demain**.
+
+---
+
+## Exemple non supervisé : découvrir des groupes
+
+Pas de labels : on donne seulement les données, la machine **cherche une structure**.
+
+<br>
+
+- **Clustering** : regrouper des articles de presse par thème (sport, politique, culture…) **sans** avoir dit quels thèmes existent
+- **Word2Vec** : apprendre à représenter les mots par des vecteurs en observant quels mots apparaissent ensemble → **prochaine partie**
+
+<br>
+
+Le non supervisé est à la base des **LLMs** : ils apprennent à partir de quantités énormes de texte **sans annotation manuelle** (séance 2).
 
 ---
 
@@ -545,7 +718,7 @@ Que se passe-t-il ?
 
 <!-- _class: title -->
 
-# Séance 2 : 12 juin
+# Séance 2 : 29 octobre
 ## Représentations vectorielles du texte : comment traduire des mots en vecteurs ?
 
 Vecteurs de mots · Bag-of-Words · Word2Vec · 
