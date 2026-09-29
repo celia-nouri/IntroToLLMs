@@ -245,9 +245,9 @@ Comment faire manipuler du langage par un ordinateur?
 
 ### Organisation des séances
 * **Séance 1 (Aujourd'hui)**: Fondations : Introduction TAL et ML 
-* **Séance 2 (29 octobre)**: Embeddings, Transformers, Tokenization, Pré-entraînement
-* **Séance 3 (30 octobre)**: Entraînement: Pré-entraînement + Post-entrainement, Utilisation et LLM-augmentés : Prompting, RAG 
-* **Séance 5 (27 novembre)**: Agents : Toolformer, Architectures agentiques + Modèles de raisonnement (bonus: Multimodalité)   
+* **Séance 2 (29 octobre)**: Word Embeddings, Tokenization, Transformers 
+* **Séance 3 (30 octobre)**: Entraînement: pré-entraînement et post-entrainement, Utilisation et LLM-augmentés : Prompting, RAG 
+* **Séance 5 (27 novembre)**: Toolformer, Architectures agentiques + Modèles de raisonnement (bonus: Multimodalité)   
 
 * **Examen**: QCM final 40 questions
 ---

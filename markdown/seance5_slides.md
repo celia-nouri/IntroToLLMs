@@ -10,9 +10,9 @@ math: mathjax
 # Introduction aux LLMs
 ## Séance 5 : Frontières et raisonnement 
 
-**4ème année RO DEV - ESGI Paris**
+**ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
-Semestre 2, 2025–2026
+Semestre 1, 2026–2027
 
 ---
 
@@ -83,27 +83,6 @@ Les LLMs ayant déjà la capacité de raisonner et d'agir (séance 4), ReAct fon
 
 Dans un deuxième temps, un plus petit LLM est finetuné (en utilisant les trajectoires ayant produit de réponses correctes) pour générer les trajectoires (raisonnements + actions + observations) conditionnées sur les questions ou tâches d'entrée. Ces trajectoires générées sont ensuite utilisées comme prompt pour le LLM non-finetuné.
 
----
-
-## Planifier avant d'agir : Tree of Thoughts
-
-**Yao et al. (2023, Princeton/Google)** dans *"Tree of Thoughts: Deliberate Problem Solving with LLMs"*.
-
-<br>
-
-ReAct avance **linéairement** : une seule trajectoire, pas de retour en arrière. Pour des problèmes qui demandent d'**explorer plusieurs pistes** (puzzle, planification, écriture créative), ça ne suffit pas.
-
-<br>
-
-**Idée** : à chaque étape, générer **plusieurs** raisonnements candidats, les **évaluer** (le modèle s'auto-juge), et explorer l'arbre résultant (BFS/DFS) avec possibilité de **backtracker** sur une branche prometteuse.
-
-```
-Étape 1 : 3 idées générées → 2 jugées prometteuses, 1 abandonnée
-Étape 2 : chaque idée prometteuse génère 3 suites → exploration continue
-          ... si une branche mène à une impasse → retour en arrière
-```
-
-Exemple du papier : le jeu du **24** (combiner 4 nombres avec +,−,×,÷ pour obtenir 24); un cas où l'exploration/backtracking bat largement le CoT classique (résoud  74% des tâches du jeu du 24 contre 4% avec le CoT classique).
 
 ---
 
@@ -245,9 +224,7 @@ Plutôt qu'un seul LLM qui fait tout, on peut faire collaborer **plusieurs insta
 
 **1.** Quelle est la différence structurelle entre ReAct et ReWOO dans la façon de traiter un plan d'action ?
 
-**2.** Pourquoi Tree of Thoughts est-il plus adapté que ReAct à un problème comme le jeu du 24 ?
-
-**3.** Dans MemGPT, qui décide quand faire passer une information de la mémoire principale vers la mémoire archivée ?
+**2.** Dans MemGPT, qui décide quand faire passer une information de la mémoire principale vers la mémoire archivée ?
 
 ---
 
@@ -257,9 +234,7 @@ Plutôt qu'un seul LLM qui fait tout, on peut faire collaborer **plusieurs insta
 
 **1.** ReAct alterne raisonnement/action/observation **à chaque étape** (adaptatif, mais coûteux) ; ReWOO génère **tout le plan d'un coup**, l'exécute, puis conclut (moins cher, moins réactif à une surprise).
 
-**2.** Le jeu du 24 demande d'**explorer plusieurs combinaisons** et de **revenir en arrière** en cas d'impasse — ReAct suit une seule trajectoire linéaire sans backtracking, alors que Tree of Thoughts explore et évalue plusieurs branches.
-
-**3.** Le **LLM lui-même**, via des appels de fonction explicites (`archive_memory_search`, `core_memory_append`) — la gestion de la mémoire est une action que le modèle apprend à déclencher, pas un mécanisme purement externe.
+**2.** Le **LLM lui-même**, via des appels de fonction explicites (`archive_memory_search`, `core_memory_append`) — la gestion de la mémoire est une action que le modèle apprend à déclencher, pas un mécanisme purement externe.
 
 ---
 
@@ -275,7 +250,7 @@ Séance 3 (Chinchilla) : à budget de calcul fixé, on choisit la taille du mod�
 
 <br>
 
-Nouvelle question : et si, au lieu d'entraîner un modèle plus gros, on laissait le modèle **"réfléchir" plus longtemps** au moment de répondre ?
+Nouvelle question : et si, au lieu d'entraîner un modèle plus gros, on laissait le modèle **plus de temps et générer plus de token** au moment de répondre ?
 
 ```
 Scaling classique (séance 3)  : + de paramètres / + de données d'entraînement
@@ -284,7 +259,7 @@ Inference-time compute (2024+) : + de calcul au moment de générer la réponse
 
 <br>
 
-Ce n'est **pas** juste du prompting (Chain-of-Thought, séance 4) : ici, le modèle est **entraîné** pour apprendre à utiliser ce temps de réflexion efficacement.
+Ce n'est **pas** juste du prompting (Chain-of-Thought, séance 4) : ici, le modèle est **entraîné** pour apprendre à utiliser ce temps et ces tokens de réflexion efficacement.
 
 ---
 

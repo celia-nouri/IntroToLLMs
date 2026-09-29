@@ -10,9 +10,9 @@ math: mathjax
 # Introduction aux LLMs
 ## Séance 4 : Utilisation et intégration d'outils
 
-**4ème année RO DEV - ESGI Paris**
+**ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
-Semestre 2, 2025–2026
+Semestre 1, 2026–2027
 
 ---
 
