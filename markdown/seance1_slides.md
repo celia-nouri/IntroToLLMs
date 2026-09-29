@@ -12,7 +12,7 @@ math: mathjax
 
 **4ème année RO DEV - ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
-Semestre 2, 2025–2026
+Semestre 1, 2026–2027
 
 ---
 
@@ -20,7 +20,7 @@ Semestre 2, 2025–2026
 
 # Plan de la séance
 
-## ~2h de cours + lab Python (4h total)
+## 2h de cours + lab Python (3h total)
 
 ---
 
@@ -41,9 +41,9 @@ Semestre 2, 2025–2026
 
 | | |
 |---|---|
-| **Volume** | 20h; 5 séances de 4h |
-| **Format** | ~2h cours + ~2h lab Python |
-| **Éval** | QCM 40 questions (31 juillet) |
+| **Volume** | 15h; 4 séances de 3h ou 4h30 |
+| **Format** | 2-3h cours + 1h lab Python |
+| **Éval** | QCM 40 questions |
 | **Prérequis** | Python, bases ML, APIs REST |
 
 <br>
