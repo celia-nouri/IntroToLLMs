@@ -37,7 +37,7 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 1.75em;
+  font-size: 2em;
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -47,13 +47,14 @@ h1 {
 }
 
 h2 {
-  font-size: 1.15em;
-  font-weight: 600;
-  margin: 0.7em 0 0.2em 0;
+  font-size: 1.55em;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0.6em 0 0.3em 0;
 }
 
 h3 {
-  font-size: 1em;
+  font-size: 1.45em;
   font-weight: 600;
   margin: 0.5em 0 0.15em 0;
 }
@@ -111,15 +112,25 @@ pre code .hljs-comment { color: var(--muted); }
 
 /* ── Blockquote ───────────────────────────────────────────── */
 blockquote {
-  border-left: 3px solid var(--primary);
+  border: none;
   background: transparent;
-  padding: 0.4em 0 0.4em 1em;
-  margin: 0.5em 0;
+  padding: 0 0 0 1.3em;
+  margin: 0.3em 0;
   color: var(--text);
   font-style: normal;
 }
 
-blockquote p { margin: 0; }
+blockquote p {
+  margin: 0.22em 0;
+  position: relative;
+}
+
+blockquote p::before {
+  content: '•';
+  position: absolute;
+  left: -1.05em;
+  color: var(--primary);
+}
 
 /* ── Tables ───────────────────────────────────────────────── */
 table {
