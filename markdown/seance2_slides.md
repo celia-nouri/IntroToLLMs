@@ -10,9 +10,9 @@ math: mathjax
 # Introduction aux LLMs
 ## Séance 2 : Représentations vectorielles du texte
 
-**4ème année RO DEV - ESGI Paris**
+**ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
-Semestre 2, 2025–2026
+Semestre 1, 2026–2027
 
 ---
 
@@ -27,6 +27,47 @@ Semestre 2, 2025–2026
 <!-- _class: section -->
 
 # 1. Récapitulatif
+
+---
+
+## Qu'est-ce qu'un token ?
+
+Un **token** = l'unité de base que le modèle traite. Ce n'est **pas forcément un mot**.
+
+<br>
+
+
+| Découpage | Résultat |
+|---|---|
+| Par mot | `[J', adore, ce, cours, !]` |
+| Par sous-mot (BPE) | `[J', ador, ##e, ce, cours, !]` |
+| Par caractère | `[J, ', a, d, o, r, e, ...]` |
+
+<br>
+
+Les LLMs modernes utilisent le **sous-mot** (WordPiece, SentencePiece, BPE). Vocabulaires de 30k–100k tokens.
+
+---
+
+## Pourquoi des sous-mots ?
+
+<br>
+
+**Par caractère** : séquences très longues, pas de sémantique
+**Par mot entier** : mots rares, néologismes, formes fléchies (`courons`, `courais`…)
+**Par sous-mot** : bon compromis : vocabulaire fini, mots inconnus décomposables, formes fléchies rassemblées
+
+<br>
+
+```
+"ChatGPT" → ["Chat", "G", "PT"]    # mot inconnu → décomposé
+"courons"  → ["cour", "ons"]       # morphologie préservée
+```
+
+<br>
+
+On verra les algorithmes de tokenization dont BPE en détail en **séance 2**.
+
 
 ---
 
