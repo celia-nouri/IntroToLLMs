@@ -108,8 +108,6 @@ maison  = [0, 0, 1, 0, 0]
 
 Pour une phrase : compter les occurrences de chaque mot du vocabulaire.
 
-<br>
-
 **Phrase** : *"Le chat mange le poisson"*
 **Vocabulaire** : `[chat, chien, mange, poisson, maison, le]`
 
@@ -118,14 +116,13 @@ BoW = [1, 0, 1, 1, 0, 2]
 ```
 
 <br>
-✅ Simple, fonctionne pour la classification de documents
+> Simple, fonctionne pour la classification de documents
 
 **Problèmes** :
 - Vecteurs immenses (taille du vocabulaire ≥ 50 000)
 - Aucune relation entre mots : `chat` et `chien` sont aussi différents que `chat` et `voiture`
 - Très creux (*sparse*) → inefficace en mémoire
-- L'ordre des mots est perdu :
-*"Le chat mange le poisson"* = *"Le poisson mange le chat"* 
+- L'ordre des mots est perdu : *"Le chat mange le poisson"* = *"Le poisson mange le chat"* 
 
 ---
 
@@ -847,7 +844,7 @@ Charger un modèle Hugging Face, utiliser le tokenizer, obtenir des embeddings c
 
 <!-- _class: title -->
 
-# Séance 3 : 10 juillet
+# Séance 3 
 ## Entraînement : comment construit-on un LLM ?
 
 Tokenization · Pré-entraînement à grande échelle · Lois de Chinchilla

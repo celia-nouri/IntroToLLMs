@@ -536,7 +536,7 @@ Modèle déployé
 
 ---
 
-## Lab : Aujourd'hui (1h-2h)
+## Lab : Aujourd'hui (1h)
 
 <br>
 

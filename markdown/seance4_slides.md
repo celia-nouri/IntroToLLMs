@@ -208,8 +208,7 @@ On ajoute quelques **exemples** (*demonstrations*) dans le prompt avant la vraie
 <br>
 
 ```
-Prompt :
-"Analyse le sentiment (Positif/Négatif/Neutre) :
+Prompt : "Analyse le sentiment (Positif/Négatif/Neutre) :
 
 Avis : 'Livraison rapide, produit conforme, rien à redire.'
 Sentiment : Positif
@@ -223,7 +222,7 @@ Sentiment :"
 
 <br>
 
-**Brown et al. (2020, OpenAI)** dans *"Language Models are Few-Shot Learners"* (papier **GPT-3**) montrent qu'ajouter des exemples dans le prompt **améliore la performance**, et que ce gain du few-shot **s'accentue à mesure que le modèle grandit** (175B tire bien plus parti des exemples qu'un petit modèle).
+**Brown et al. (2020, OpenAI)** dans *"Language Models are Few-Shot Learners"* (**GPT-3**) montrent qu'ajouter des exemples dans le prompt **améliore la performance**, et que ce gain du few-shot **s'accentue à mesure que le modèle grandit** (175B tire bien plus parti des exemples qu'un petit modèle).
 
 ---
 

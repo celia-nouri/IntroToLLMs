@@ -712,7 +712,7 @@ Que se passe-t-il ?
 
 <!-- _class: title -->
 
-# Séance 2 : 29 octobre
+# Séance 2
 ## Représentations vectorielles du texte : comment traduire des mots en vecteurs ?
 
 Vecteurs de mots · Bag-of-Words · Word2Vec · 

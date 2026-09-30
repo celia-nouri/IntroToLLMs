@@ -56,7 +56,7 @@ Trois briques à assembler : **agir en boucle** (ReAct), **planifier**, et **se 
 
 <br>
 
-<center><img width="550px" src="../imgs/course5/react.png"/></center>
+<center><img width="700px" src="../imgs/course5/react.png"/></center>
 
 
 ---
@@ -108,7 +108,7 @@ Dans ReAct, chaque observation ré-injecte **tout le contexte** dans un nouvel a
 
 ## ReWOO
 
-<center><img width="650px" src="../imgs/course5/rewoo.png"/></center>
+<center><img width="700px" src="../imgs/course5/rewoo.png"/></center>
 
 
 ---
@@ -157,7 +157,7 @@ Gestion virtuelle du contexte = une technique qui s'inspire des systèmes de mé
 
 ## MemGPT : le LLM comme système d'exploitation
 
-<center><img width="500px" src="../imgs/course5/memgpt.png"/></center>
+<center><img width="700px" src="../imgs/course5/memgpt.png"/></center>
 
 <br>
 
@@ -175,7 +175,7 @@ Performances accrues pour l'analyse de documents et des chats multi-sessions.
 
 <br>
 
-<center><img width="550px" src="../imgs/course5/genagents0.png"/></center>
+<center><img width="700px" src="../imgs/course5/genagents0.png"/></center>
 
 ---
 
@@ -197,7 +197,7 @@ Périodiquement, l'agent **réfléchit** (*reflection*) : il relit ses souvenirs
 
 ## Generative Agents : un journal d'expériences
 
-<center><img width="600px" src="../imgs/course5/genagents1.png"/></center>
+<center><img width="700px" src="../imgs/course5/genagents1.png"/></center>
 
 ---
 
@@ -354,7 +354,7 @@ Aucun humain n'a jamais montré au modèle **comment** raisonner étape par éta
 
 ## Comment la récompense est-elle définie ?
 
-Différence essentielle avec le RLHF classique (séance 3) : **pas de modèle de récompense appris**. La récompense est **calculée par des règles fixes, programmées à l'avance** — pas par un réseau de neurones entraîné sur des préférences humaines.
+Différence essentielle avec le RLHF classique (séance 3) : **pas de modèle de récompense appris**. La récompense est **calculée par des règles fixes, programmées à l'avance**, pas par un réseau de neurones entraîné sur des préférences humaines.
 
 <br>
 
@@ -372,11 +372,11 @@ Récompense de format (format reward) :
 
 <br>
 
-**Pourquoi ce choix** : un modèle de récompense **appris** peut être "trompé" (*reward hacking*, séance 3) ; une règle de vérification automatique (le code s'exécute-t-il ? la réponse est-elle juste ?) ne peut pas être trompée de la même façon, mais cela ne fonctionne que pour des domaines **vérifiables** (maths, code), pas pour une réponse ouverte ou créative.
+Un modèle de récompense **appris** peut être "trompé" (*reward hacking*) ; une règle de vérification automatique (le code s'exécute-t-il ? la réponse est-elle juste ?) ne peut pas être trompée de la même façon, mais cela ne fonctionne que pour des domaines **vérifiables** (maths, code), pas pour une réponse ouverte/créative.
 
 ---
 
-## Le raisonnement émerge — et ses limites
+## Le raisonnement et ses limites
 
 Résultat surprenant : sans aucun exemple humain de raisonnement, R1-Zero développe spontanément un raisonnement **long**, avec de l'**auto-vérification**, et même un "**aha moment**" documenté où le modèle écrit littéralement *"Wait, let me re-check this"* ou *"That’s an aha moment I can flag here"* en plein raisonnement.
 
@@ -746,21 +746,17 @@ Merci pour votre attention pendant ce semestre !
 <br>
 
 📄 **ReAct** : Yao et al. (2022/2023); arxiv.org/abs/2210.03629
-📄 **Tree of Thoughts** : Yao et al. (2023); arxiv.org/abs/2305.10601
 📄 **ReWOO** : Xu et al. (2023); arxiv.org/abs/2305.18323
 📄 **MemGPT** : Packer et al. (2023); arxiv.org/abs/2310.08560
 📄 **Generative Agents** : Park et al. (2023); arxiv.org/abs/2304.03442
 📄 **Multiagent Debate** : Du et al. (2023); arxiv.org/abs/2305.14325
-
-<br>
 
 📄 **DeepSeek-R1** : DeepSeek-AI (2025); arxiv.org/abs/2501.12948
 📄 **DeepSeekMath (GRPO)** : Shao et al. (2024); arxiv.org/abs/2402.03300
 📄 **Scaling Test-Time Compute** : Snell et al. (2024); arxiv.org/abs/2408.03314
 📄 **Let's Verify Step by Step** : Lightman et al. (2023); arxiv.org/abs/2305.20050
 
-<br>
-
 📄 **CLIP** : Radford et al. (2021); arxiv.org/abs/2103.00020
 📄 **LLaVA** : Liu et al. (2023); arxiv.org/abs/2304.08485
 📄 **Vision Transformer (ViT)** : Dosovitskiy et al. (2020); arxiv.org/abs/2010.11929
+
