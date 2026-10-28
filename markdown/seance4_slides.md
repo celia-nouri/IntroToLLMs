@@ -440,6 +440,10 @@ Sans cache : token t → recalcule K,V pour les t-1 tokens précédents + le nou
 Avec cache : token t → réutilise K,V en cache, calcule seulement K,V du nouveau token
 ```
 
+---
+
+## Optimiser l'inférence : KV-cache
+
 <br>
 
 **Kwon et al. (2023)**, *PagedAttention / vLLM* : gère la mémoire du KV-cache comme un système d'exploitation gère la RAM (pagination), ce qui permet de servir **beaucoup plus de requêtes en parallèle** avec le même matériel.
