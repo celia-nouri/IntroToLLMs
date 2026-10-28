@@ -158,7 +158,7 @@ $$\text{TF-IDF}(t, d) = \underbrace{\text{TF}(t,d)}_{\text{fréq. dans le doc}} 
 <br>
 
 **Idée clé** (Firth, 1957) :
-> *"A word is known by the company it keeps."*
+> *"You shall know a word by the company it keeps !"*
 
 Le sens d'un mot peut être inféré en regardant les mots qui l'**entourent**.
 
@@ -205,7 +205,7 @@ vecteur("roi") - vecteur("homme") + vecteur("femme")
 
 <br>
 
-Certaines directions dans l'espace vectoriel ont un **sens** :
+Les chercheurs attribuent à certaines directions dans l'espace vectoriel un **sens** :
 - Direction **genre** : roi → reine, acteur → actrice
 - Direction **capitale** : France → Paris, Allemagne → Berlin
 - Direction **pluriel** : chat → chats, chien → chiens
@@ -277,7 +277,7 @@ $$\text{vecteur("Paris")} - \text{vecteur("France")} + \text{vecteur("Allemagne"
 
 <br>
 
-La relation **capitale ↔ pays** est encodée comme une direction dans l'espace vectoriel.
+La relation **capitale ↔ pays** est approximée par une direction dans l'espace vectoriel.
 
 ```
 Paris   - France   = vecteur("est la capitale de")
@@ -287,7 +287,7 @@ Berlin  - Allemagne = vecteur("est la capitale de")
 <br>
 
 > **Limite critique de Word2Vec** : les embeddings sont **statiques** : un seul vecteur par mot.
-> Le mot *"batterie"* a le **même vecteur** qu'il s'agisse de l'instrument de musique ou de la pile électrique. 
+> Forte limitation pour les mots polysémites, comme le mot *"batterie"* qui auraa le **même vecteur** qu'il s'agisse de l'instrument de musique ou de la pile électrique. 
 > → C'est ce que les Transformers vont résoudre.
 
 ---
@@ -371,12 +371,12 @@ $$
 
 <br>
 
-La fertilité elle dépend du tokenizer et **texte auquel on l'applique** — même tokenizer, fertilité différente selon la langue ou le domaine.
+La fertilité elle dépend du tokenizer et **texte auquel on l'applique** — même tokenizer, fertilité différente selon la langue ou le domaine. Le tokeniser OpenAI en moyenne, 1 token ≈ 4 caractères ou ≈ 3/4 de mot (soit 100 tokens ≈ 75 mots en anglais, variable selon les langues).
 
 <br>
 
-- À vocabulaire égal, plus une langue est morphologiquement riche et/ou mal représentée à l'entraînement, plus sa fertilité sera élevée
-- Fertilité élevée → séquences plus longues → coût d'inférence plus élevé, contexte rempli plus vite
+- Fertilité élevée → séquences plus longues → coût d'inférence plus élevé, contexte rempli plus vite 
+- Fertilité basse → s'approche d'un token par mot, représentation condensée et efficace
 
 ---
 
@@ -490,7 +490,7 @@ On fusionne $A$ et $B$ si les voir ensemble est plus probable que les voir sépa
 
 <br>
 
-**Biais multilingue** : pour un même tokenizer, la **fertilité** (tokens/mot, cf. slide "Granularité") varie fortement selon la langue — un token en anglais ≈ 1 mot ; en arabe ou en thaï ≈ 3–5 tokens pour la même information → coût plus élevé, fenêtre de contexte plus vite remplie.
+**Biais multilingue** : pour un même tokenizer, la **fertilité** (tokens/mot, cf. slide "Granularité") varie fortement selon la langue — un token en anglais ≈ 3/4 mot (presque 1 mot) ; en arabe ou en thaï ≈ 3–5 tokens pour la même information (un mot) → coût plus élevé, fenêtre de contexte plus vite remplie.
 
 <br>
 
@@ -580,21 +580,25 @@ Intuitif : on lit la phrase mot à mot, la compréhension s'accumule.
 
 <!-- _class: section -->
 
-## Le Transformer
+# Le Transformer
 
 "Attention is All You Need", Vaswani et al., 2017
+
+---
+
+## Le Transformer
 
 L'idée radicale: **Se débarrasser de la récurrence.**
 
 <br>
 
-Au lieu de traiter les tokens un par un, permettre à **chaque token de regarder directement tous les autres** en même temps.
+Au lieu de traiter les tokens un par un (au moment du traiter un token, on accède uniquement à l'information des tokens précédents), le mécanisme de l'attention permet d'**accéder à tous les tokens du contexte pour le traitement de chaque token**.  
 
 <br>
 
 Avantages immédiats :
-- **Parallélisation** totale → entraînement massivement accéléré sur GPU
-- **Dépendances longue distance** capturées sans dégradation
+- **Parallélisation** du traitement de chaque token → entraînement massivement accéléré sur GPU
+- **Dépendances longue distance** capturées sans dégradation (dans la limite de la taille du contexte).
 - **Scalabilité** : plus de paramètres = meilleur modèle (jusqu'à un certain point)
 
 ---
@@ -627,9 +631,9 @@ Chaque token produit **3 vecteurs** :
 
 <br>
 
-**Analogie** : Imagine une bibliothèque : Tu arrives avec une requête (Query) : "Je cherche un livre sur les réseaux de neurones". Chaque livre a une étiquette au dos (Key) : "Machine Learning", "Cuisine", "Histoire"... Le contenu du livre (Value) : c'est ce que tu liras vraiment si tu le choisis.
+**Analogie de la bibliothèque** : Tu arrives avec une requête (Query) : "Je cherche un livre sur les réseaux de neurones". Chaque livre a une étiquette au dos (Key) : Thèmes ("Machine Learning", "Cuisine", "Histoire"), ou les trois premières lettres du nom de famille de l'auteur... Le contenu du livre (Value) : c'est ce que tu liras vraiment si tu le choisis.
 <br>
-En pratique les Q, K, V pour chaque tokens sont des vecteurs entraînés pour que les bonnes paires se ressemblent. C'est le modèle qui apprend ce que "chercher" et "proposer" veulent dire.
+En pratique les Q, K, V pour chaque tokens sont des vecteurs entraînés pour que les bonnes paires se ressemblent. C'est le modèle qui apprend ce que "chercher" et "représenter" veulent dire.
 
 ---
 
@@ -645,12 +649,12 @@ $$\text{output}_i = \sum_j \text{score}(i,j) \cdot V_j$$
 
 <br>
 
-La division par $\sqrt{d_k}$ évite que les produits scalaires deviennent trop grands et saturent le softmax.
+La division par $\sqrt{d_k}$ (taille des vecteurs K = taille des vecteurs Q) évite que les produits scalaires deviennent trop grands et saturent le softmax.
 
 ---
 
 ### Self-Attention (Auto-attention)
-Chaque mot d'une séquence calcule **son** attention sur tous les autres mots de cette **même séquence** pour enrichir sa représentation en tenant compte du contexte.
+Chaque token d'une séquence calcule **son** attention sur tous les autres tokens de cette **même séquence** pour enrichir sa représentation en tenant compte du contexte.
 
 <center><img width="900px" src="../imgs/course1/self_attention.svg"/></center>
 
@@ -808,6 +812,17 @@ Représentations contextuelles
 **Vrai/Faux :** L'architecture RNN résout l'ambiguïté du mot *"batterie"*.
 **Vrai/Faux :** L'architecture Transformer résout l'ambiguïté du mot *"batterie"*.
 
+
+---
+
+<!-- _class: quiz -->
+
+## 🧩 Quiz final : 
+
+Word2Vec résout l'ambiguïté du mot *"batterie"*. **Faux** 
+Le tokenizer BPE produit des tokenizations différentes pour les deux sens du mot *"batterie"*. **Faux** 
+L'architecture Transformer résout l'ambiguïté du mot *"batterie"*. **Vrai** 
+
 ---
 
 ## Ressources 
@@ -827,7 +842,7 @@ Représentations contextuelles
 
 ---
 
-## Lab : Aujourd'hui (1h)
+## Lab : Aujourd'hui (30mins-1h)
 
 <br>
 
@@ -847,7 +862,7 @@ Charger un modèle Hugging Face, utiliser le tokenizer, obtenir des embeddings c
 # Séance 3 
 ## Entraînement : comment construit-on un LLM ?
 
-Tokenization · Pré-entraînement à grande échelle · Lois de Chinchilla
+Pré-entraînement à grande échelle · Lois de Chinchilla
 Instruction tuning & RLHF · Évaluation
 
 **Lectures conseillées** :
