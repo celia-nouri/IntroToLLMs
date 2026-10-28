@@ -8,13 +8,11 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 3 : Entrainement LLM
+## Séance 3 : Entrainement LLMs
 
 **ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
 Semestre 1, 2026–2027
-
-
 
 ---
 
@@ -27,22 +25,12 @@ Semestre 1, 2026–2027
 
 ---
 
-
----
-
-<!-- _class: section -->
-
-# 1. Pré-entraînement à grande échelle
-
----
-
 ## La logique des LLMs modernes
 
 <br>
 
-**Étape 1 — Pré-entraînement** : tâche non supervisée, immense corpus
-**Étape 2 — Fine-tuning / Alignement** : adaptation au comportement souhaité
-
+**Étape 1 — Pré-entraînement** : apprentissage du language, tâche non supervisée, immense corpus
+**Étape 2 — Fine-tuning / Alignement** : adaptation à une tâche ou à des préférences
 
 <br>
 
@@ -55,11 +43,15 @@ Semestre 1, 2026–2027
 
 <br>
 
-**Pourquoi cette séparation ?** Le pré-entraînement est coûteux mais ne se fait qu'une fois. Tout le reste (sections 4, 5, 6) part de ce modèle de base.
+---
+
+<!-- _class: section -->
+
+# 1. Pré-entraînement à grande échelle
 
 ---
 
-## Pré-entraînement : prédire le prochain token
+## Pré-entraînement décodeur : prédire le prochain token
 
 Pour un modèle décodeur (type GPT), la tâche est :
 
@@ -74,15 +66,35 @@ Cible  : "tapis"
 
 <br>
 
-- Aucune annotation humaine nécessaire — tout texte est une donnée gratuite
+- Aucune annotation humaine nécessaire — tout texte est une donnée utilisable
 - GPT-3 : ~300 milliards de tokens d'entraînement
 - LLaMA 3 : ~15 000 milliards de tokens
 
 ---
 
+## Pré-entraînement encodeur : compléter le blanc "Fill in the blank" 
+
+Pour un modèle encodeur (type BERT), la tâche est :
+
+> **Étant donné tous les tokens autours, prédire le token masqué.**
+
+<br>
+
+```
+Input  : "Le chat est [MASK] sur le tapis"
+Cible  : "assis"
+```
+
+<br>
+
+- Aucune annotation humaine nécessaire — tout texte est une donnée utilisable
+
+---
+
+
 ## Ce que le modèle apprend implicitement
 
-En apprenant à prédire la suite, le modèle doit **modéliser** :
+En apprenant à prédire la suite ou le token masqué, le modèle doit **modéliser** :
 
 <br>
 
@@ -94,7 +106,7 @@ En apprenant à prédire la suite, le modèle doit **modéliser** :
 
 <br>
 
-Les LLMs ne "savent" rien au sens factuel — ils modélisent ce qui est **probable**, pas ce qui est vrai.
+Les LLMs modélisent ce qui est **probable** au vue des fréquences d'occurences dans le corpus d'entraînement.
 
 ---
 
@@ -113,6 +125,7 @@ Les LLMs ne "savent" rien au sens factuel — ils modélisent ce qui est **proba
 <br>
 
 En pratique, un LLM récent mélange **web généraliste + code + livres + données multilingues**, avec des proportions choisies à la main (*data mixture*).
+Question de propriété intellectuelle : à qui appartient ces données publiques ? 
 
 ---
 
@@ -130,10 +143,10 @@ Filtrage de langue → Déduplication → Filtrage qualité (heuristiques + clas
 
 <br>
 
-**Deux risques concrets** :
+**Risques concrets** :
 - **Contamination** : si des benchmarks d'évaluation fuitent dans les données d'entraînement, le modèle les "a déjà vus" → scores gonflés (on en parlera plus tard)
 - **Droit d'auteur** : procès *New York Times vs OpenAI* (2023) — utiliser des textes protégés pour l'entraînement est-il légal ? Question encore non tranchée juridiquement.
-
+- **Contenus problématiques** : insultes, fausses informations, contenus illégaux... 
 
 ---
 
@@ -212,9 +225,19 @@ Les lois de Chinchilla optimisent le coût de **l'entraînement**. Mais un modè
 
 ---
 
+## Conclusions
+
+1. Collection d'un corpus de données massif (web + livres + articles scientifiques...), filtrage qualité. 
+2. Tokenizer et tokenisation (apprendre un tokenizer à partir d'un corpus d'entraînement spécifique)
+3. Déterminser l'architecture du modèle (encoder/décodeur), le nombre de paramètres/ taille du corpus (20 tokens par paramètres)
+4. Entraîner le modèle sur le corpus d'entraînement. Non supervisé: prédiction du token suivant ou du token masqué. 
+==> Modèle pré-entraîné
+
+---
+
 <!-- _class: section -->
 
-# 3. Instruction tuning
+# 3. Instruction tuning 
 
 ---
 
@@ -334,6 +357,7 @@ Objectif d'**alignement** (Anthropic, *HHH*) : un modèle **Helpful, Honest, Har
 <br>
 
 > Le SFT apprend "un exemple correct parmi d'autres". L'alignement apprend **une préférence relative** : "cette réponse est meilleure que celle-là."
+> Idée générale: il est plus facile d'exprimé une préférence que la "meilleure" réponse à une question. 
 
 ---
 
@@ -351,9 +375,9 @@ Objectif d'**alignement** (Anthropic, *HHH*) : un modèle **Helpful, Honest, Har
 
 ---
 
-## Étape 1 : Pre-training et SFT
+## Étape 1 : Pre-training et SFT (déjà vus)
 
-1. Pré-entraînez et finetunez votre modèle sur du texte brut, avec un objectif de CLM (*Causal Language Modeling*, prédiction du prochain token).
+1. Pré-entraînez et finetunez votre modèle sur du texte brut, avec un objectif de CLM (*Causal Language Modeling*, prédiction du prochain token). 
 
 <br>
 
