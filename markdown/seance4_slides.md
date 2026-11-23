@@ -8,7 +8,7 @@ math: mathjax
 <!-- _class: title -->
 
 # Introduction aux LLMs
-## Séance 4 : Utilisation et intégration d'outils
+## Séance 4 : Du prompting à l'intégration d'outils
 
 **ESGI Paris**
 Célia Nouri · `celia.nouri@inria.fr`
