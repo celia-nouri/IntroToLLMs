@@ -334,7 +334,7 @@ Ré-entraîner ou fine-tuner le modèle à chaque mise à jour de connaissance s
 
 ---
 
-## Le pipeline RAG
+## L'architecture RAG
 
 **Lewis et al. (2020, Facebook AI)** dans *"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"*.
 
@@ -359,7 +359,7 @@ Le LLM **n'est jamais ré-entraîné** : les documents retrouvés sont simplemen
 
 ---
 
-## Le pipeline RAG
+## L'architecture RAG
 
 <center><img width="700px" src="../imgs/course4/rag_pipeline.png"/></center>
 
@@ -496,7 +496,7 @@ Apprendre au LLM à générer ces appels à outils **au moment opportun** et **a
 
 **Schick et al. (2023, Meta AI)** dans *"Toolformer: Language Models Can Teach Themselves to Use Tools"*.
 
-<center><img width="700px" src="../imgs/course4/toolfomer_ex.png"/></center>
+<center><img width="700px" src="../imgs/course4/toolformer_ex.png"/></center>
 
 ---
 
@@ -537,7 +537,7 @@ Aucune annotation humaine : le modèle apprend **seul** quand un outil est utile
 
 ## Toolformer : la pipeline
 
-<center><img width="700px" src="../imgs/course4/toolfomer_pipeline.png"/></center>
+<center><img width="700px" src="../imgs/course4/toolformer_pipeline.png"/></center>
 
 
 ---
