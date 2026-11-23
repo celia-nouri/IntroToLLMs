@@ -496,7 +496,7 @@ Apprendre au LLM à générer ces appels à outils **au moment opportun** et **a
 
 **Schick et al. (2023, Meta AI)** dans *"Toolformer: Language Models Can Teach Themselves to Use Tools"*.
 
-<center><img width="700px" src="../imgs/course4/toolformer_ex.png"/></center>
+<center><img width="500px" src="../imgs/course4/toolformer_ex.png"/></center>
 
 ---
 
@@ -537,7 +537,7 @@ Aucune annotation humaine : le modèle apprend **seul** quand un outil est utile
 
 ## Toolformer : la pipeline
 
-<center><img width="700px" src="../imgs/course4/toolformer_pipeline.png"/></center>
+<center><img width="850px" src="../imgs/course4/toolformer_pipeline.png"/></center>
 
 
 ---
