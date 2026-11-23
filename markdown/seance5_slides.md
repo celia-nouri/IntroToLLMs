@@ -20,8 +20,7 @@ Semestre 1, 2026–2027
 
 1. Architectures agentiques : ReAct, planification, mémoire, systèmes multi-agents
 2. Modèles de raisonnement : o1/o3, DeepSeek-R1, inference-time compute
-3. (bonus) Multimodalité : vision-langage en bref
-4. Préparation à l'examen & révisions
+3. Préparation à l'examen & révisions
 
 ---
 
@@ -501,110 +500,6 @@ Ces vérificateurs, combinés au *self-consistency* (séance 4) et à la recherc
 **3.** Le RLHF utilise un **modèle de récompense appris** (un réseau de neurones entraîné sur des comparaisons humaines) ; DeepSeek-R1-Zero utilise une récompense **basée sur des règles fixes** (la réponse maths est-elle exacte ? le code passe-t-il les tests ?), non apprise et donc plus difficile à "tromper" (reward hacking).
 
 **4.** L'ORM ne note que la réponse finale ; le PRM note **chaque étape** du raisonnement, ce qui permet de détecter des erreurs de raisonnement même quand la réponse finale est correcte par coïncidence.
-
----
-
-<!-- _class: section -->
-
-# 3. (bonus) Multimodalité : vision-langage en bref
-
----
-
-## Pourquoi le texte seul ne suffit pas
-
-<br>
-
-Beaucoup de tâches réelles nécessitent de **percevoir une image** : lire un graphique, décrire une capture d'écran, analyser un document scanné, comprendre un diagramme d'architecture.
-
-<br>
-
-**Idée centrale** : convertir l'image en une séquence de "tokens visuels", pour que le **même** Transformer qui traite le texte puisse aussi traiter l'image, avec le **même mécanisme d'attention**.
-
----
-
-## CLIP : aligner texte et image
-
-<br>
-
-<center><img width="500px" src="../imgs/course5/clip.png"/></center>
-
-
----
-
-## CLIP : aligner texte et image
-
-**Radford et al. (2021, OpenAI)** dans *"Learning Transferable Visual Models From Natural Language Supervision"*.
-
-<br>
-
-Entraîné par **apprentissage contrastif** sur ~400 millions de paires (image, légende) collectées sur le web : rapprocher l'embedding d'une image de celui de **sa** légende, et l'éloigner des légendes des autres images du batch.
-
-<br>
-
-```
-image(chat) ~ texte("une photo d'un chat")     ← rapprochés
-image(chat) ≠ texte("une photo d'un avion")    ← éloignés
-```
-
-<br>
-
-Résultat : un espace d'embeddings **partagé** entre texte et image, permettant de la classification **zero-shot** (comparer une image à plusieurs labels textuels candidats, sans entraînement spécifique).
-
----
-
-
-## Brancher la vision sur un LLM : LLaVA
-
-**Liu et al. (2023)** — *"Visual Instruction Tuning"*.
-
-<br>
-
-```
-Image → découpée en patchs → Vision Transformer (ViT)  → embeddings visuels
-                                                              ↓
-                                    petite couche de projection (entraînée)
-                                                              ↓
-                              "tokens visuels" injectés dans le LLM,
-                              mélangés aux tokens de texte, même attention
-```
-
-<br>
-
-**Recette légère** : encodeur visuel (CLIP) **gelé** + LLM (Vicuna) + une **petite** couche de projection entraînée sur des instructions visuelles générées par GPT-4 — pas besoin de ré-entraîner tout le modèle de langage.
-
----
-
-## Modèles multimodaux natifs
-
-Les modèles de production récents (GPT-4o, Claude 3+, Gemini) ne "branchent" plus la vision après coup : ils sont **entraînés conjointement** sur du texte et de l'image **entrelacés** dès le pré-entraînement.
-
-<br>
-
-- Meilleure intégration entre les deux modalités qu'une architecture "encodeur gelé + adaptateur" (LLaVA)
-- Permet aussi, pour certains modèles, de **générer** des images ou de l'audio, pas seulement de les comprendre
-- Le principe reste le même que pour le texte (séance 3) : plus de données multimodales, plus de calcul → meilleures capacités
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Multimodalité
-
-<br>
-
-**1.** Comment un modèle vision-langage type LLaVA "voit"-il une image, techniquement ?
-
-**2.** Qu'est-ce que CLIP apprend exactement, et sur quel type de données ?
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Réponses
-
-**1.** L'image est découpée en patchs, encodée par un Vision Transformer, puis projetée dans le même espace d'embeddings que les tokens de texte — le LLM leur applique ensuite la **même** attention qu'à des tokens textuels.
-
-**2.** Un espace d'embeddings **partagé** entre texte et image, en rapprochant chaque image de sa légende (et en l'éloignant des autres légendes du batch) sur ~400 millions de paires (image, texte) du web.
 
 ---
 

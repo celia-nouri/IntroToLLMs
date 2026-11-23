@@ -20,9 +20,8 @@ Semestre 1, 2026–2027
 
 1. Évaluation
 2. Prompting : zero-shot, few-shot, Chain-of-Thought
-3. Contraintes d'inférence : fenêtre de contexte, quantisation, coût
-4. Retrieval-Augmented Generation (RAG)
-5. Appel d'outils et function calling (Toolformer)
+3. Retrieval-Augmented Generation (RAG)
+4. Appel d'outils et function calling (Toolformer)
 6. Lab 4 : Prompting et RAG
 
 ---
@@ -310,179 +309,12 @@ Chaîne 3 → réponse : 12
 
 **3.** Le modèle génère un raisonnement intermédiaire, token par token, **avant** la réponse finale. Chaque étape de raisonnement conditionne la suivante, ce qui améliore les tâches nécessitant plusieurs étapes de calcul ou de logique.
 
----
-
-<!-- _class: section -->
-
-# 3. Contraintes d'inférence
-
----
-
-## Un modèle entraîné, mais il faut le faire tourner
-
-Le pré-entraînement et l'alignement (séance 3) sont des coûts **ponctuels**. L'**inférence**, elle, se répète à **chaque requête**, potentiellement des millions de fois par jour.
-
-<br>
-
-Trois contraintes structurent tout déploiement de LLM en production :
-
-- La **fenêtre de contexte** : combien de tokens le modèle peut-il traiter à la fois ?
-- La **quantisation** : comment réduire la taille du modèle en mémoire ?
-- Le **coût** : combien coûte chaque requête, et comment le réduire ?
-
----
-
-## Qu'est-ce que l'inférence ?
-
-**Inférence** = faire passer une entrée dans le modèle **déjà entraîné** pour obtenir une sortie (une suite de tokens) — par opposition à l'**entraînement**, qui ajuste les poids.
-
-<br>
-
-```
-Entraînement : forward + backward + mise à jour des poids   (une fois)
-Inférence    : forward seul, poids figés                    (à chaque requête)
-```
-
-<br>
-
-- L'inférence tourne, comme l'entraînement, sur des **GPU** (parfois CPU pour de petits modèles) : ce sont des multiplications matricielles massivement parallélisables.
-- Pas de rétropropagation ni de stockage des gradients → moins coûteux **par appel** que l'entraînement, mais répété des millions de fois par jour en production.
-
-<br>
-
-**Ordre de grandeur du coût** : `coût ≈ (temps GPU en heures) × (prix horaire du GPU) / (nb de requêtes traitées en parallèle)`. D'où l'intérêt de tout ce qui suit : réduire le temps de calcul (contexte, quantisation) et maximiser le parallélisme (KV-cache, batching).
-
----
-
-## La fenêtre de contexte
-
-Rappel (séance 2) : l'attention calcule une interaction entre **chaque paire de tokens** → coût **quadratique** en la longueur de séquence $n$ : $O(n^2)$.
-
-<br>
-
-Doubler le contexte ≈ quadrupler le calcul d'attention.
-
-<br>
-
-| Modèle | Fenêtre de contexte (ordre de grandeur) |
-|---|---|
-| GPT-3 (2020) | 2 048 tokens |
-| GPT-4 (2023) | 8k – 128k tokens selon la variante |
-| Claude 3+ | ~200 000 tokens |
-| Gemini 1.5 (2024) | ~1 à 2 millions de tokens (annoncé) |
-
-<br>
-
----
-
-## Optimisation du calcul de l'attention
-
-**Dao et al. (2022)** — *FlashAttention* : recalcule l'attention exacte (pas d'approximation) en minimisant les lectures/écritures mémoire GPU → mêmes résultats, bien plus rapide, permet des contextes plus longs en pratique.
-
-Le nombre d'opérations reste $O(n^2)$ en théorie. 
-FlashAttention élimine un goulot d'étranglement mémoire (moins d'aller-retours entre la mémoire GPU lente et rapide), d'où le gain de vitesse réel.
-
-<br>
-
-**Dao (2023)** — *FlashAttention-2* : même idée, mais avec un meilleur **partitionnement du travail entre threads/warps du GPU** → jusqu'à 2× plus rapide que la v1, en exploitant mieux le matériel, toujours sans changer la complexité théorique $O(n^2)$.
-
----
-
-## Quantisation
-
-**Idée** : stocker les poids du modèle avec **moins de bits** (FP32/FP16 → INT8 → INT4), pour réduire la mémoire et accélérer l'inférence, au prix d'une petite perte de précision numérique.
-
-<br>
-
-```
-FP16 : 2 octets / paramètre   → LLaMA 65B ≈ 130 Go de RAM/VRAM
-INT4 : 0,5 octet / paramètre  → LLaMA 65B ≈  35 Go de RAM/VRAM
-```
-
-<br>
-
-**Dettmers et al. (2022)** — *LLM.int8()* : inférence en 8 bits sans perte de performance mesurable, en traitant séparément quelques dimensions à forte magnitude (*outliers*).
-
-**Dettmers et al. (2023)** — *QLoRA* : quantisation en 4 bits + fine-tuning léger (LoRA) → un modèle de 65 milliards de paramètres fine-tuné sur un **unique GPU de 48 Go**, au lieu de plusieurs dizaines de GPU.
-
----
-
-## Le coût de l'inférence
-
-Les API de LLM facturent au **token** (entrée + sortie); d'où l'importance de la tokenization vue en séance 3 (fertilité, vocabulaire).
-
-<br>
-
-**Ordres de grandeur (indicatifs, évoluent vite)**, prix pour 1 million de tokens :
-
-| Modèle | Entrée | Sortie |
-|---|---|---|
-| Modèle frontière (GPT-4 Turbo, Claude Opus) | ~10 $ | ~30-75 $ |
-| Modèle frontière "rapide" (GPT-4o, Claude Sonnet) | ~2-3 $ | ~10-15 $ |
-| Petit modèle open-source hébergé (LLaMA 8B) | < 0,20 $ | < 0,20 $ |
-
-<br>
-
-**Côté infrastructure** : louer un GPU type A100/H100 sur le cloud coûte de l'ordre de **1 à 4 $/heure** selon le fournisseur et la disponibilité (le prix au token payé par le client couvre ce coût GPU, réparti sur toutes les requêtes traitées en parallèle sur cette même carte).
-
----
-
-## Optimiser l'inférence : KV-cache
-
-Générer un token nécessite l'attention entre ce token et **tous** les précédents. Sans optimisation, générer le token $t$ referait tout le calcul d'attention sur les $t-1$ tokens précédents. Ceci est **redondant**, puisque ce calcul a déjà été fait pour générer les tokens précédents.
-
-<br>
-
-**KV-cache** : on garde en mémoire les vecteurs **clé (K)** et **valeur (V)** pour chaque token généré. À l'étape suivante, on calcule Q/K/V **seulement pour le nouveau token**, et on réutilise le K/V déjà en cache pour le reste.
-
-```
-Sans cache : token t → recalcule K,V pour les t-1 tokens précédents + le nouveau
-Avec cache : token t → réutilise K,V en cache, calcule seulement K,V du nouveau token
-```
-
----
-
-## Optimiser l'inférence : KV-cache
-
-<br>
-
-**Kwon et al. (2023)**, *PagedAttention / vLLM* : gère la mémoire du KV-cache comme un système d'exploitation gère la RAM (pagination), ce qui permet de servir **beaucoup plus de requêtes en parallèle** avec le même matériel.
-
-<br>
-
-> Compromis constant en production : **latence** (répondre vite à une requête) vs **débit** (traiter un grand nombre de requêtes en parallèle).
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Contraintes d'inférence
-
-<br>
-
-**1.** Pourquoi doubler la fenêtre de contexte d'un Transformer coûte-t-il plus que deux fois plus cher en calcul d'attention ?
-
-**2.** Quel est le compromis fondamental de la quantisation ?
-
-**3.** À quoi sert le KV-cache pendant la génération de texte ?
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz — Réponses
-
-**1.** L'attention calcule une interaction entre chaque paire de tokens : le coût est **quadratique** ($O(n^2)$) en la longueur de séquence, pas linéaire.
-
-**2.** Réduire la précision numérique des poids (moins de bits) pour gagner en mémoire et en vitesse, au prix d'une **légère perte de qualité** — souvent négligeable jusqu'à 8 ou 4 bits.
-
-**3.** Il évite de recalculer les clés/valeurs d'attention des tokens déjà générés à chaque nouveau token — sans lui, chaque token généré recoûterait aussi cher que toute la séquence précédente.
 
 ---
 
 <!-- _class: section -->
 
-# 4. Retrieval-Augmented Generation (RAG)
+# 3. Retrieval-Augmented Generation (RAG)
 
 ---
 
@@ -524,6 +356,13 @@ Ré-entraîner ou fine-tuner le modèle à chaque mise à jour de connaissance s
 <br>
 
 Le LLM **n'est jamais ré-entraîné** : les documents retrouvés sont simplement injectés comme contexte dans le prompt.
+
+---
+
+## Le pipeline RAG
+
+<center><img width="700px" src="../imgs/course4/rag_pipeline.png"/></center>
+
 
 ---
 
@@ -610,18 +449,18 @@ R : "240 requêtes par minute par client, avec un burst possible de
 
 <!-- _class: section -->
 
-# 5. Appel d'outils et function calling
+# 4. Appel d'outils et function calling
 
 ---
 
-## Ce qu'un LLM ne peut pas savoir tout seul
+## Les tâches difficiles/impossibles à réaliser avec uniquement un LLM  
 
 <br>
 
 - L'heure ou la météo **actuelles**
 - Un calcul **précis** sur de grands nombres (les LLMs approximent souvent l'arithmétique)
 - L'état d'une base de données ou d'un système **externe**
-- Exécuter réellement du **code**
+- Exécuter réellement du **code** (compiler, faire tourner des tests unitaires...)
 
 <br>
 
@@ -649,7 +488,15 @@ Modèle → "Il devrait faire environ 22°C et nuageux à Paris demain."
 
 <br>
 
-Le modèle **décide quand** appeler un outil et **avec quels arguments**.
+Apprendre au LLM à générer ces appels à outils **au moment opportun** et **avec les bons arguments**.
+
+---
+
+## Toolformer 
+
+**Schick et al. (2023, Meta AI)** dans *"Toolformer: Language Models Can Teach Themselves to Use Tools"*.
+
+<center><img width="700px" src="../imgs/course4/toolfomer_ex.png"/></center>
 
 ---
 
@@ -685,6 +532,13 @@ Le modèle **décide quand** appeler un outil et **avec quels arguments**.
 <br>
 
 Aucune annotation humaine : le modèle apprend **seul** quand un outil est utile.
+
+---
+
+## Toolformer : la pipeline
+
+<center><img width="700px" src="../imgs/course4/toolfomer_pipeline.png"/></center>
+
 
 ---
 
@@ -755,13 +609,7 @@ Modèle capable d'agir sur le monde extérieur → agent (suite en séance 5)
 📄 **Contamination des benchmarks** : Oren et al. (2023); arxiv.org/abs/2310.17623
 📄 **Chain-of-Thought** : Wei et al. (2022); arxiv.org/abs/2201.11903
 📄 **Zero-shot CoT** : Kojima et al. (2022); arxiv.org/abs/2205.11916
-📄 **Self-Consistency** : Wang et al. (2022); arxiv.org/abs/2203.11171
 📄 **Rethinking Demonstrations** : Min et al. (2022); arxiv.org/abs/2202.12837
-📄 **FlashAttention** : Dao et al. (2022); arxiv.org/abs/2205.14135
-📄 **FlashAttention-2** : Dao (2023); arxiv.org/abs/2307.08691
-📄 **LLM.int8()** : Dettmers et al. (2022); arxiv.org/abs/2208.07339
-📄 **QLoRA** : Dettmers et al. (2023); arxiv.org/abs/2305.14314
-📄 **vLLM / PagedAttention** : Kwon et al. (2023); arxiv.org/abs/2309.06180
 📄 **RAG** : Lewis et al. (2020); arxiv.org/abs/2005.11401
 📄 **Toolformer** : Schick et al. (2023); arxiv.org/abs/2302.04761
 
