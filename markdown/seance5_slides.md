@@ -541,76 +541,8 @@ https://app.wooclap.com/MUZAQOT?from=instruction-slide
 
 <br>
 
-<center><img width="400px" src="../imgs/course5/wooclap.png"/></center>
+<center><img width="500px" src="../imgs/course5/wooclap.png"/></center>
 
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz de révision — Séances 1 & 2 (et un peu 3)
-
-<br>
-
-**1.** *(séance 1)* Quelle est la différence entre le stemming et la lemmatisation ?
-
-**2.** *(séance 1)* Un modèle atteint 98% d'accuracy en entraînement et 55% en test. Quel est le diagnostic, et citez une solution.
-
-**3.** *(séance 2)* Pourquoi un Transformer s'entraîne-t-il plus vite qu'un RNN sur GPU ?
-
-**4.** *(séance 2)* Pourquoi les embeddings Word2Vec ne peuvent-ils pas distinguer les deux sens du mot "batterie" (instrument vs pile), contrairement aux embeddings d'un Transformer ?
-
-**5.** *(séance 3)* Selon les lois de Chinchilla, que faut-il faire croître **en même temps** que la taille d'un modèle pour utiliser un budget de calcul de façon optimale ?
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz de révision — Séances 1 & 2 (et un peu 3) : Réponses
-
-**1.** Le **stemming** tronque brutalement un mot selon des règles fixes (`"courais"` → `"cour"`) ; la **lemmatisation** trouve sa forme canonique en tenant compte du contexte grammatical (`"courais"` → `"courir"`).
-
-**2.** C'est du **surapprentissage** (*overfitting*) : le modèle mémorise les données d'entraînement au lieu d'apprendre des patterns généraux. Solutions : dropout, weight decay, early stopping, ou plus de données.
-
-**3.** Parce que l'attention calcule les relations entre tous les tokens **en parallèle** via des multiplications matricielles, alors qu'un RNN traite les tokens **séquentiellement**, un par un.
-
-**4.** Word2Vec attribue **un seul vecteur fixe** par mot, indépendamment du contexte ; un Transformer produit des embeddings **contextuels**, qui changent selon les mots environnants.
-
-**5.** La **quantité de données d'entraînement** (le nombre de tokens) — règle empirique : environ 20 tokens par paramètre.
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz de révision — Séances 3, 4 & 5
-
-<br>
-
-**1.** *(séance 3)* Quelle est la différence d'objectif entre le SFT et le RLHF/DPO ?
-
-**2.** *(séance 3)* Pourquoi un score élevé sur MMLU ne garantit-il pas qu'un modèle est réellement meilleur ?
-
-**3.** *(séance 4)* Pourquoi doubler la fenêtre de contexte d'un Transformer coûte-t-il plus que deux fois plus cher en calcul ?
-
-**4.** *(séance 4)* Quelle est la principale limite d'un LLM que le RAG cherche à résoudre ?
-
-**5.** *(séance 5)* Quel est l'avantage de ReAct par rapport à un simple prompt Chain-of-Thought pour répondre à une question nécessitant une information récente (ex. la météo actuelle) ?
-
----
-
-<!-- _class: quiz -->
-
-## 🧩 Quiz de révision — Séances 3, 4 & 5 : Réponses
-
-**1.** Le **SFT** apprend au modèle à suivre le **format** instruction → réponse (un exemple correct parmi d'autres) ; le **RLHF/DPO** apprend une **préférence relative** entre plusieurs réponses possibles, pour affiner le comportement au-delà du simple format.
-
-**2.** Risque de **contamination** : le benchmark (ou ses réponses) peut avoir fuité dans les données de pré-entraînement, gonflant le score sans réelle généralisation.
-
-**3.** L'attention calcule une interaction entre **chaque paire de tokens** : le coût est **quadratique** ($O(n^2)$) en la longueur de séquence, pas linéaire.
-
-**4.** Les connaissances d'un LLM sont **figées** à sa date de coupure d'entraînement, et n'incluent aucune donnée privée/interne — le RAG permet d'injecter des informations à jour ou privées **sans ré-entraîner** le modèle.
-
-**5.** Un simple CoT raisonne uniquement à partir de ce que le modèle **sait déjà** (figé à l'entraînement) ; ReAct peut **agir** (ex. lancer une recherche) pour obtenir une information réelle et à jour, puis raisonner à partir du résultat observé.
 
 ---
 
